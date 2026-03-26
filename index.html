@@ -2,15 +2,21 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0f">
+
+  <!-- iPhone / iOS -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Vcard">
-  <meta name="theme-color" content="#0a0a0f">
+
+  <!-- Android / Chrome -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Vcard">
 
   <title>Kariban — Carte de visite digitale</title>
 
-  <!-- Icône app / iPhone -->
+  <!-- Icône app smartphone -->
   <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,
   <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'>
     <rect width='180' height='180' rx='40' fill='%230c0c0c'/>
@@ -41,9 +47,7 @@
       --text: #f0f0ee;
       --muted: #7a7a72;
       --accent: #f0f0ee;
-      --accent-dark: #0c0c0c;
       --accent-bg: rgba(240,240,238,0.06);
-      --green: #34C759;
       --radius: 14px;
       --radius-sm: 8px;
     }
@@ -51,10 +55,16 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
-      height: 100%;
+      min-height: 100%;
       background: var(--bg);
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     .view { display: none; min-height: 100vh; }
@@ -163,6 +173,7 @@
       cursor: pointer;
       width: 100%;
       transition: opacity 0.2s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .btn-start:hover,
@@ -190,6 +201,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .btn-back:hover { color: var(--text); }
@@ -253,6 +265,8 @@
       font-size: 14px;
       font-family: 'DM Sans', sans-serif;
       padding: 14px 0;
+      -webkit-appearance: none;
+      appearance: none;
     }
 
     .field-input::placeholder { color: #3a3a4a; }
@@ -422,6 +436,7 @@
       font-family: 'DM Sans', sans-serif;
       text-align: left;
       transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .action-btn:hover {
@@ -498,6 +513,7 @@
       cursor: pointer;
       width: 100%;
       transition: color 0.15s, border-color 0.15s, background 0.15s;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .btn-edit:hover {
@@ -537,12 +553,22 @@
     .view.active > * { animation: fadeUp 0.3s ease both; }
     .view.active > *:nth-child(2) { animation-delay: 0.05s; }
     .view.active > *:nth-child(3) { animation-delay: 0.1s; }
+
+    @media (max-width: 380px) {
+      .nav-logo svg {
+        width: 220px;
+      }
+
+      .field-label {
+        min-width: 76px;
+      }
+    }
   </style>
 </head>
 <body>
 
   <!-- VIEW : ACCUEIL -->
-  <div class="view active" id="viewHome">
+  <div class="view" id="viewHome">
     <nav class="nav">
       <div class="nav-logo">
         <svg width="250" height="24" viewBox="0 0 250 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Kariban Group">
@@ -568,7 +594,7 @@
         </div>
         <div class="step">
           <div class="step-num">2</div>
-          <div class="step-text"><strong>Ajoute cette carte</strong> sur l'écran d'accueil de ton téléphone</div>
+          <div class="step-text"><strong>Ajoute cette carte</strong> sur l'écran d'accueil de ton smartphone</div>
         </div>
         <div class="step">
           <div class="step-num">3</div>
@@ -633,7 +659,7 @@
         </div>
         <div class="field-row">
           <label class="field-label">Adresse</label>
-          <input class="field-input" id="ad" type="text" placeholder="TopTex Group, 10 avenue du girou 31621 Castelnau-d'Estrétefonds">
+          <input class="field-input" id="ad" type="text" placeholder="Kariban Group, 10 avenue du Girou 31620 Castelnau-d'Estrétefonds">
         </div>
       </div>
     </div>
@@ -694,8 +720,8 @@
           </svg>
         </div>
         <div>
-          <div class="install-banner-title">Ajouter à l'écran d'accueil iPhone</div>
-          <div class="install-banner-text">Dans Safari → icône Partager → <em>Sur l'écran d'accueil</em>. Ta carte devient une app — ouvrable en 1 tap pour afficher ton QR.</div>
+          <div class="install-banner-title">Ajouter à l'écran d'accueil</div>
+          <div class="install-banner-text">Sur iPhone : Safari → Partager → <em>Sur l'écran d'accueil</em>. Sur Android : menu du navigateur → <em>Ajouter à l'écran d'accueil</em>. Si ta carte existe déjà, l'app s'ouvre directement dessus.</div>
         </div>
       </div>
 
@@ -709,12 +735,20 @@
 
   <script>
     var d = {};
-    var STORAGE_KEY = 'kariban_vcard_data';
-    var VIEW_KEY = 'kariban_vcard_view';
+    var STORAGE_KEY = 'kariban_vcard_data_v2';
 
     function val(id) {
       var el = document.getElementById(id);
       return el ? el.value.trim() : '';
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
 
     function escapeVCard(str) {
@@ -736,14 +770,6 @@
       } catch (e) {
         d = {};
       }
-    }
-
-    function saveCurrentView(id) {
-      localStorage.setItem(VIEW_KEY, id);
-    }
-
-    function loadCurrentView() {
-      return localStorage.getItem(VIEW_KEY) || 'viewHome';
     }
 
     function fillFormFromData() {
@@ -778,6 +804,9 @@
         el.addEventListener('input', function() {
           collectFormData();
         });
+        el.addEventListener('change', function() {
+          collectFormData();
+        });
       });
     }
 
@@ -785,8 +814,12 @@
       document.querySelectorAll('.view').forEach(function(v) {
         v.classList.remove('active');
       });
-      document.getElementById(id).classList.add('active');
-      saveCurrentView(id);
+
+      var target = document.getElementById(id);
+      if (target) {
+        target.classList.add('active');
+      }
+
       window.scrollTo(0, 0);
     }
 
@@ -817,23 +850,23 @@
     }
 
     function row(bg, icon, label, value) {
-      return '<div class=\"card-row\"><div class=\"card-row-icon\" style=\"background:' + bg + '20;\">' + icon + '</div><div><div class=\"card-row-label\">' + label + '</div><div class=\"card-row-val\">' + value + '</div></div></div>';
+      return '<div class="card-row"><div class="card-row-icon" style="background:' + bg + '20;">' + icon + '</div><div><div class="card-row-label">' + escapeHtml(label) + '</div><div class="card-row-val">' + escapeHtml(value) + '</div></div></div>';
     }
 
     function phoneIcon() {
-      return '<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\"><path d=\"M13 10.5c-.9-.5-1.8-.4-2.5.1l-.8.5C8.5 10.4 7 8.9 6.5 7.7l.5-.8c.5-.7.6-1.6.1-2.5L6.2 3c-.4-.7-1.3-1-2-.6L3 3.2c-.9.7-1.1 1.8-.5 3 1.3 2.8 4.5 6 7.3 7.3 1.2.6 2.3.4 3-.5l.8-1.2c.4-.7.2-1.6-.6-2z\" fill=\"#34C759\"/></svg>';
+      return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 10.5c-.9-.5-1.8-.4-2.5.1l-.8.5C8.5 10.4 7 8.9 6.5 7.7l.5-.8c.5-.7.6-1.6.1-2.5L6.2 3c-.4-.7-1.3-1-2-.6L3 3.2c-.9.7-1.1 1.8-.5 3 1.3 2.8 4.5 6 7.3 7.3 1.2.6 2.3.4 3-.5l.8-1.2c.4-.7.2-1.6-.6-2z" fill="#34C759"/></svg>';
     }
 
     function emailIcon() {
-      return '<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\"><rect x=\"1\" y=\"3.5\" width=\"14\" height=\"9\" rx=\"1.5\" stroke=\"#007AFF\" stroke-width=\"1.2\"/><path d=\"M1 5l7 5 7-5\" stroke=\"#007AFF\" stroke-width=\"1.2\"/></svg>';
+      return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3.5" width="14" height="9" rx="1.5" stroke="#007AFF" stroke-width="1.2"/><path d="M1 5l7 5 7-5" stroke="#007AFF" stroke-width="1.2"/></svg>';
     }
 
     function webIcon() {
-      return '<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\"><circle cx=\"8\" cy=\"8\" r=\"6.5\" stroke=\"#5856D6\" stroke-width=\"1.2\"/><path d=\"M8 1.5c-2 2-2 11 0 13M8 1.5c2 2 2 11 0 13M1.5 8h13\" stroke=\"#5856D6\" stroke-width=\"1.2\"/></svg>';
+      return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#5856D6" stroke-width="1.2"/><path d="M8 1.5c-2 2-2 11 0 13M8 1.5c2 2 2 11 0 13M1.5 8h13" stroke="#5856D6" stroke-width="1.2"/></svg>';
     }
 
     function mapIcon() {
-      return '<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\"><path d=\"M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8 4.5 8s4.5-4.5 4.5-8c0-2.5-2-4.5-4.5-4.5z\" stroke=\"#FF9500\" stroke-width=\"1.2\"/><circle cx=\"8\" cy=\"6\" r=\"1.5\" stroke=\"#FF9500\" stroke-width=\"1.2\"/></svg>';
+      return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8 4.5 8s4.5-4.5 4.5-8c0-2.5-2-4.5-4.5-4.5z" stroke="#FF9500" stroke-width="1.2"/><circle cx="8" cy="6" r="1.5" stroke="#FF9500" stroke-width="1.2"/></svg>';
     }
 
     function renderCard() {
@@ -903,7 +936,6 @@
 
     function resetCard() {
       localStorage.removeItem(STORAGE_KEY);
-      localStorage.removeItem(VIEW_KEY);
       d = {};
       fillFormFromData();
       document.getElementById('cardBody').innerHTML = '';
@@ -926,23 +958,17 @@
       }, 2500);
     }
 
+    function hasSavedCard() {
+      return !!(d.fn || d.ln || d.jt || d.p1 || d.p2 || d.em || d.wb || d.ad);
+    }
+
     function restoreApp() {
       loadData();
       fillFormFromData();
 
-      var hasData = !!(d.fn || d.ln || d.jt || d.p1 || d.p2 || d.em || d.wb || d.ad);
-      var lastView = loadCurrentView();
-
-      if (hasData) {
+      if (hasSavedCard()) {
         renderCard();
-
-        if (lastView === 'viewCard') {
-          goTo('viewCard');
-        } else if (lastView === 'viewForm') {
-          goTo('viewForm');
-        } else {
-          goTo('viewHome');
-        }
+        goTo('viewCard');
       } else {
         goTo('viewHome');
       }
