@@ -67,11 +67,11 @@
     .view.active { display: flex; flex-direction: column; }
 
     .nav {
-      padding: 16px 20px 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+  padding: calc(env(safe-area-inset-top, 0px) + 18px) 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
     .nav-logo svg {
       display: block;
@@ -178,11 +178,11 @@
     .btn-secondary:active { transform: scale(0.98); }
 
     .form-header {
-      padding: 20px 20px 0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+  padding: calc(env(safe-area-inset-top, 0px) + 18px) 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
     .btn-back {
       background: var(--surface);
@@ -651,8 +651,8 @@
   </div>
 
   <div class="view" id="viewCard">
-    <div style="padding:16px 20px 0; display:flex; align-items:center; gap:12px;">
-      <button class="btn-back" onclick="goTo('viewForm')">
+<div style="padding:calc(env(safe-area-inset-top, 0px) + 18px) 20px 0; display:flex; align-items:center; gap:12px;">
+  <button class="btn-back" onclick="goTo('viewForm')">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
