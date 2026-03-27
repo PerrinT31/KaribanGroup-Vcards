@@ -492,6 +492,18 @@
       <div class="qr-wrapper"><div id="qrCodeAdviser"></div></div>
       <div class="qr-label">QR code de votre conseiller(e)<br>à faire scanner par le client.</div>
     </div>
+    <!-- Ajouter le contact -->
+<button class="action-btn" id="btnAddContact" onclick="downloadVCF()">
+  <div class="action-btn-icon">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <path d="M9 4v10M4 9h10" stroke="#f0f0ee" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div>
+    <div class="action-btn-label">Ajouter le contact</div>
+    <div class="action-btn-sub">Télécharge une fiche contact .vcf</div>
+  </div>
+</button>
 
     <!-- Téléchargement -->
     <button class="action-btn" id="btnDownloadQR" onclick="downloadQR()">
@@ -766,6 +778,14 @@ function row(bg, icon, label, value) {
 function hasAdviser() {
   return !!(adviser.fn||adviser.ln||adviser.p1||adviser.em);
 }
+  
+function buildProfileUrl(type) {
+  var enc = encodeData({ d: d, adviser: adviser });
+  var url = new URL(window.location.href);
+  url.searchParams.set('c', enc);
+  url.searchParams.set('view', type || 'me');
+  return url.toString();
+}
 
 function renderCard() {
   document.getElementById('cardAvatar').textContent = ini(d);
@@ -781,8 +801,8 @@ function renderCard() {
   if (d.ad) body += row('#FF9500', mapIcon(), 'Adresse', d.ad);
   document.getElementById('cardBody').innerHTML = body;
 
-  makeQR('qrCode', getBestVCard(d), 180);
-  makeQR('qrHidden', getBestVCard(d), 400);
+ makeQR('qrCode', buildProfileUrl('me'), 180);
+ makeQR('qrHidden', buildProfileUrl('me'), 400);
 
   var tabs = document.getElementById('qrTabs');
   if (hasAdviser()) {
@@ -792,8 +812,8 @@ function renderCard() {
     document.getElementById('adviserName').textContent = aName;
     document.getElementById('adviserJob').textContent = adviser.jt || '';
 
-    makeQR('qrCodeAdviser', getBestVCard(adviser), 180);
-    makeQR('qrHiddenAdviser', getBestVCard(adviser), 400);
+  makeQR('qrCodeAdviser', buildProfileUrl('adviser'), 180);
+  makeQR('qrHiddenAdviser', buildProfileUrl('adviser'), 400);
   } else {
     tabs.style.display = 'none';
     switchQR('me');
@@ -879,6 +899,36 @@ function downloadQR() {
   showToast('QR code téléchargé');
 }
 
+  function downloadVCF() {
+  var obj = activeQR === 'adviser' ? adviser : d;
+  var vcard = buildVCard(obj);
+
+  if (!vcard || (!obj.fn && !obj.ln && !obj.em && !obj.p1)) {
+    showToast('Aucun contact disponible');
+    return;
+  }
+
+  var blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+
+  var a = document.createElement('a');
+  var suffix = activeQR === 'adviser'
+    ? ((adviser.fn || 'conseiller') + '-' + (adviser.ln || 'contact'))
+    : ((d.fn || 'contact') + '-' + (d.ln || 'kariban'));
+
+  a.href = url;
+  a.download = suffix + '.vcf';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  setTimeout(function() {
+    URL.revokeObjectURL(url);
+  }, 1000);
+
+  showToast('Contact téléchargé');
+}
+
 function openInstallModal() {
   document.getElementById('installModal').classList.add('open');
 }
@@ -931,12 +981,12 @@ function restoreApp() {
   if (hasSavedCard()) {
     if (!qd) updateShareUrl(true);
     renderCard();
-    goTo('viewCard');
-  } else {
-    goTo('viewHome');
-  }
+    var initialView = getViewFromQuery();
+if (initialView === 'adviser' && hasAdviser()) {
+  switchQR('adviser');
+} else {
+  switchQR('me');
 }
-
 document.addEventListener('DOMContentLoaded', function() {
   attachAutosave();
   restoreApp();
