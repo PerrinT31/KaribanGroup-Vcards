@@ -613,61 +613,152 @@ var adviser = {};
 var activeQR = 'me';
 var STORAGE_KEY = 'kariban_vcard_data_v4';
 
-function val(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function val(id) {
+  var el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
 
 function escapeHtml(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
+
 function escapeVC(s) {
-  return String(s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/;/g,'\\;').replace(/,/g,'\\,');
+  return String(s || '')
+    .replace(/\\/g, '\\\\')
+    .replace(/\n/g, '\\n')
+    .replace(/;/g, '\\;')
+    .replace(/,/g, '\\,');
 }
 
 function saveData() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({d:d, adviser:adviser})); } catch(e) {}
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ d: d, adviser: adviser }));
+  } catch (e) {}
 }
+
 function loadData() {
   try {
     var raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) { var p = JSON.parse(raw); d = p.d||{}; adviser = p.adviser||{}; }
-  } catch(e) { d={}; adviser={}; }
+    if (raw) {
+      var p = JSON.parse(raw);
+      d = p.d || {};
+      adviser = p.adviser || {};
+    }
+  } catch (e) {
+    d = {};
+    adviser = {};
+  }
 }
 
 function encodeData(data) {
-  try { return btoa(unescape(encodeURIComponent(JSON.stringify(data)))); } catch(e) { return ''; }
+  try {
+    return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  } catch (e) {
+    return '';
+  }
 }
+
 function decodeData(enc) {
-  try { return JSON.parse(decodeURIComponent(escape(atob(enc)))); } catch(e) { return null; }
+  try {
+    return JSON.parse(decodeURIComponent(escape(atob(enc))));
+  } catch (e) {
+    return null;
+  }
 }
+
 function getDataFromQuery() {
   var p = new URLSearchParams(window.location.search);
-  var c = p.get('c'); if (!c) return null;
+  var c = p.get('c');
+  if (!c) return null;
   return decodeData(c);
 }
-function buildShareUrl() {
-  var enc = encodeData({d:d, adviser:adviser});
+
+function getViewFromQuery() {
+  var p = new URLSearchParams(window.location.search);
+  return p.get('view') || 'me';
+}
+
+function buildProfileUrl(type) {
+  var profile = type === 'adviser' ? adviser : d;
+
+  var payload = {
+    profile: profile,
+    type: type || 'me'
+  };
+
+  var enc = encodeData(payload);
   var url = new URL(window.location.href);
   url.searchParams.set('c', enc);
+  url.searchParams.set('view', type || 'me');
   return url.toString();
 }
+
 function buildShareUrl() {
   return buildProfileUrl('me');
+}
+
+function updateShareUrl(silent) {
+  collectFormData();
+  if (!d.fn && !d.ln) {
+    if (!silent) showToast('Remplis au moins ton prénom ou nom.');
+    return;
+  }
+  window.history.replaceState({}, '', buildShareUrl());
 }
 
 function fillFormFromData() {
   ['fn','ln','jt','p1','p2','em','wb','ad'].forEach(function(id) {
     var el = document.getElementById(id);
-    if (el) el.value = d[id]||'';
+    if (el) el.value = d[id] || '';
   });
-  ['fn','ln','jt','p1','p2','em','wb','ad'].forEach(function(id) {
-    var el = document.getElementById('a'+id);
-    if (el) el.value = adviser[id]||'';
+
+  var adviserMap = {
+    afn: 'fn',
+    aln: 'ln',
+    ajt: 'jt',
+    ap1: 'p1',
+    ap2: 'p2',
+    aem: 'em',
+    awb: 'wb',
+    aad: 'ad'
+  };
+
+  Object.keys(adviserMap).forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = adviser[adviserMap[id]] || '';
   });
 }
+
 function collectFormData() {
-  d = { fn:val('fn'),ln:val('ln'),jt:val('jt'),p1:val('p1'),p2:val('p2'),em:val('em'),wb:val('wb'),ad:val('ad') };
-  adviser = { fn:val('afn'),ln:val('aln'),jt:val('ajt'),p1:val('ap1'),p2:val('ap2'),em:val('aem'),wb:val('awb'),ad:val('aad') };
+  d = {
+    fn: val('fn'),
+    ln: val('ln'),
+    jt: val('jt'),
+    p1: val('p1'),
+    p2: val('p2'),
+    em: val('em'),
+    wb: val('wb'),
+    ad: val('ad')
+  };
+
+  adviser = {
+    fn: val('afn'),
+    ln: val('aln'),
+    jt: val('ajt'),
+    p1: val('ap1'),
+    p2: val('ap2'),
+    em: val('aem'),
+    wb: val('awb'),
+    ad: val('aad')
+  };
+
   saveData();
 }
+
 function attachAutosave() {
   ['fn','ln','jt','p1','p2','em','wb','ad','afn','aln','ajt','ap1','ap2','aem','awb','aad'].forEach(function(id) {
     var el = document.getElementById(id);
@@ -678,15 +769,18 @@ function attachAutosave() {
 }
 
 function goTo(id) {
-  document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+  document.querySelectorAll('.view').forEach(function(v) {
+    v.classList.remove('active');
+  });
   var t = document.getElementById(id);
   if (t) t.classList.add('active');
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
 
 function ini(obj) {
-  var f = (obj||d).fn||'', l = (obj||d).ln||'';
-  return ((f[0]||'')+(l[0]||'')).toUpperCase()||'KG';
+  var f = (obj || d).fn || '';
+  var l = (obj || d).ln || '';
+  return ((f[0] || '') + (l[0] || '')).toUpperCase() || 'KG';
 }
 
 function cleanPhone(phone) {
@@ -727,69 +821,41 @@ function buildVCard(obj) {
 
   var website = cleanUrl(o.wb);
   if (website) lines.push('URL:' + escapeVC(shortenText(website, 120)));
-
-  // Adresse volontairement raccourcie
   if (o.ad) lines.push('ADR:;;' + escapeVC(shortenText(o.ad, 100)) + ';;;;');
 
   lines.push('END:VCARD');
   return lines.join('\n');
 }
-  function buildCompactVCard(obj) {
-  var o = obj || d;
-  var lines = ['BEGIN:VCARD', 'VERSION:3.0'];
 
-  var fullName = ((o.fn || '') + ' ' + (o.ln || '')).trim();
-  if (fullName) {
-    lines.push('FN:' + escapeVC(shortenText(fullName, 60)));
-  }
-
-  if (o.p1) lines.push('TEL:' + escapeVC(cleanPhone(o.p1)));
-  if (o.em) lines.push('EMAIL:' + escapeVC(shortenText(o.em, 80)));
-
-  var website = cleanUrl(o.wb);
-  if (website) lines.push('URL:' + escapeVC(shortenText(website, 120)));
-
-  lines.push('END:VCARD');
-  return lines.join('\n');
+function phoneIcon(c) {
+  return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 10.5c-.9-.5-1.8-.4-2.5.1l-.8.5C8.5 10.4 7 8.9 6.5 7.7l.5-.8c.5-.7.6-1.6.1-2.5L6.2 3c-.4-.7-1.3-1-2-.6L3 3.2c-.9.7-1.1 1.8-.5 3 1.3 2.8 4.5 6 7.3 7.3 1.2.6 2.3.4 3-.5l.8-1.2c.4-.7.2-1.6-.6-2z" fill="' + (c || '#34C759') + '"/></svg>';
 }
 
-function getBestVCard(obj) {
-  var full = buildVCard(obj);
-
-  // seuil empirique prudent pour éviter les QR trop lourds
-  if (full.length > 350) {
-    return buildCompactVCard(obj);
-  }
-
-  return full;
+function emailIcon() {
+  return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3.5" width="14" height="9" rx="1.5" stroke="#007AFF" stroke-width="1.2"/><path d="M1 5l7 5 7-5" stroke="#007AFF" stroke-width="1.2"/></svg>';
 }
 
-function phoneIcon(c) { return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 10.5c-.9-.5-1.8-.4-2.5.1l-.8.5C8.5 10.4 7 8.9 6.5 7.7l.5-.8c.5-.7.6-1.6.1-2.5L6.2 3c-.4-.7-1.3-1-2-.6L3 3.2c-.9.7-1.1 1.8-.5 3 1.3 2.8 4.5 6 7.3 7.3 1.2.6 2.3.4 3-.5l.8-1.2c.4-.7.2-1.6-.6-2z" fill="'+(c||'#34C759')+'"/></svg>'; }
-function emailIcon() { return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3.5" width="14" height="9" rx="1.5" stroke="#007AFF" stroke-width="1.2"/><path d="M1 5l7 5 7-5" stroke="#007AFF" stroke-width="1.2"/></svg>'; }
-function webIcon()   { return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#5856D6" stroke-width="1.2"/><path d="M8 1.5c-2 2-2 11 0 13M8 1.5c2 2 2 11 0 13M1.5 8h13" stroke="#5856D6" stroke-width="1.2"/></svg>'; }
-function mapIcon()   { return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8 4.5 8s4.5-4.5 4.5-8c0-2.5-2-4.5-4.5-4.5z" stroke="#FF9500" stroke-width="1.2"/><circle cx="8" cy="6" r="1.5" stroke="#FF9500" stroke-width="1.2"/></svg>'; }
+function webIcon() {
+  return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#5856D6" stroke-width="1.2"/><path d="M8 1.5c-2 2-2 11 0 13M8 1.5c2 2 2 11 0 13M1.5 8h13" stroke="#5856D6" stroke-width="1.2"/></svg>';
+}
+
+function mapIcon() {
+  return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8 4.5 8s4.5-4.5 4.5-8c0-2.5-2-4.5-4.5-4.5z" stroke="#FF9500" stroke-width="1.2"/><circle cx="8" cy="6" r="1.5" stroke="#FF9500" stroke-width="1.2"/></svg>';
+}
 
 function row(bg, icon, label, value) {
-  return '<div class="card-row"><div class="card-row-icon" style="background:'+bg+'20;">'+icon+'</div><div><div class="card-row-label">'+escapeHtml(label)+'</div><div class="card-row-val">'+escapeHtml(value)+'</div></div></div>';
+  return '<div class="card-row"><div class="card-row-icon" style="background:' + bg + '20;">' + icon + '</div><div><div class="card-row-label">' + escapeHtml(label) + '</div><div class="card-row-val">' + escapeHtml(value) + '</div></div></div>';
 }
 
 function hasAdviser() {
-  return !!(adviser.fn||adviser.ln||adviser.p1||adviser.em);
+  return !!(adviser.fn || adviser.ln || adviser.p1 || adviser.em || adviser.jt || adviser.wb || adviser.ad);
 }
-  
-function buildProfileUrl(type) {
-  var profile = type === 'adviser' ? adviser : d;
 
-  var payload = {
-    profile: profile,
-    type: type || 'me'
-  };
-
-  var enc = encodeData(payload);
-  var url = new URL(window.location.href);
-  url.searchParams.set('c', enc);
-  url.searchParams.set('view', type || 'me');
-  return url.toString();
+function hasSavedCard() {
+  return !!(
+    d.fn || d.ln || d.jt || d.p1 || d.p2 || d.em || d.wb || d.ad ||
+    adviser.fn || adviser.ln || adviser.jt || adviser.p1 || adviser.p2 || adviser.em || adviser.wb || adviser.ad
+  );
 }
 
 function renderCard() {
@@ -806,8 +872,8 @@ function renderCard() {
   if (d.ad) body += row('#FF9500', mapIcon(), 'Adresse', d.ad);
   document.getElementById('cardBody').innerHTML = body;
 
- makeQR('qrCode', buildProfileUrl('me'), 180);
- makeQR('qrHidden', buildProfileUrl('me'), 400);
+  makeQR('qrCode', buildProfileUrl('me'), 180);
+  makeQR('qrHidden', buildProfileUrl('me'), 400);
 
   var tabs = document.getElementById('qrTabs');
   if (hasAdviser()) {
@@ -817,11 +883,10 @@ function renderCard() {
     document.getElementById('adviserName').textContent = aName;
     document.getElementById('adviserJob').textContent = adviser.jt || '';
 
-  makeQR('qrCodeAdviser', buildProfileUrl('adviser'), 180);
-  makeQR('qrHiddenAdviser', buildProfileUrl('adviser'), 400);
+    makeQR('qrCodeAdviser', buildProfileUrl('adviser'), 180);
+    makeQR('qrHiddenAdviser', buildProfileUrl('adviser'), 400);
   } else {
     tabs.style.display = 'none';
-    switchQR('me');
   }
 }
 
@@ -839,25 +904,9 @@ function makeQR(elId, text, size) {
       colorLight: '#fff',
       correctLevel: QRCode.CorrectLevel.L
     });
-
-    setTimeout(function() {
-      var img = el.querySelector('img');
-      var canvas = el.querySelector('canvas');
-      if (canvas) {
-        canvas.style.display = 'block';
-        if (img) img.style.display = 'none';
-      } else if (img) {
-        img.style.display = 'block';
-      }
-    }, 100);
-  } catch(e) {
+  } catch (e) {
     console.error('QR generation failed for', elId, e);
   }
-}
-
-function getViewFromQuery() {
-  var p = new URLSearchParams(window.location.search);
-  return p.get('view') || 'me';
 }
 
 function switchQR(tab) {
@@ -950,7 +999,9 @@ function closeInstallModal(e) {
 }
 
 function resetCard() {
-  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (e) {}
 
   d = {};
   adviser = {};
@@ -962,7 +1013,6 @@ function resetCard() {
   document.getElementById('cardJob').textContent = '';
   document.getElementById('cardJob').style.display = 'none';
   document.getElementById('cardAvatar').textContent = 'KG';
-
   document.getElementById('qrCode').innerHTML = '';
   document.getElementById('qrHidden').innerHTML = '';
   document.getElementById('qrCodeAdviser').innerHTML = '';
@@ -988,13 +1038,6 @@ function showToast(msg) {
   }, 2500);
 }
 
-function hasSavedCard() {
-  return !!(
-    d.fn || d.ln || d.jt || d.p1 || d.p2 || d.em || d.wb || d.ad ||
-    adviser.fn || adviser.ln || adviser.jt || adviser.p1 || adviser.p2 || adviser.em || adviser.wb || adviser.ad
-  );
-}
-
 function restoreApp() {
   var qd = getDataFromQuery();
 
@@ -1006,18 +1049,13 @@ function restoreApp() {
       d = qd.profile || {};
       adviser = {};
     }
-  } else if (qd && (qd.d || qd.adviser)) {
-    // Compatibilité avec ton ancien format
-    d = qd.d || {};
-    adviser = qd.adviser || {};
-    saveData();
   } else {
     loadData();
   }
 
   fillFormFromData();
 
-  if (hasSavedCard() || hasAdviser()) {
+  if (hasSavedCard()) {
     renderCard();
 
     var initialView = getViewFromQuery();
@@ -1037,7 +1075,6 @@ document.addEventListener('DOMContentLoaded', function() {
   attachAutosave();
   restoreApp();
 });
-
-  </script>
+</script>
 </body>
 </html>
