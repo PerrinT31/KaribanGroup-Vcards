@@ -850,6 +850,11 @@ function makeQR(elId, text, size) {
   }
 }
 
+function getViewFromQuery() {
+  var p = new URLSearchParams(window.location.search);
+  return p.get('view') || 'me';
+}
+
 function switchQR(tab) {
   activeQR = tab;
 
@@ -859,19 +864,6 @@ function switchQR(tab) {
   document.getElementById('qrSectionMe').style.display = tab === 'me' ? 'flex' : 'none';
   document.getElementById('qrSectionAdviser').style.display = tab === 'adviser' ? 'flex' : 'none';
 
-  if (tab === 'adviser' && hasAdviser()) {
-    // On génère le QR uniquement quand la zone devient visible
-    setTimeout(function() {
-      makeQR('qrCodeAdviser', getBestVCard(adviser), 180);
-    }, 50);
-  }
-
-  if (tab === 'me') {
-    setTimeout(function() {
-      makeQR('qrCode', getBestVCard(d), 180);
-    }, 50);
-  }
-
   var lbl = document.getElementById('btnDownloadLabel');
   lbl.textContent = tab === 'me'
     ? 'Télécharger mon QR code'
@@ -880,7 +872,11 @@ function switchQR(tab) {
 
 function generateCard() {
   collectFormData();
-  if (!d.fn && !d.ln) { showToast('Remplis au moins ton prénom ou nom.'); return; }
+  if (!d.fn && !d.ln) {
+    showToast('Remplis au moins ton prénom ou nom.');
+    return;
+  }
+
   updateShareUrl(true);
   renderCard();
   switchQR('me');
@@ -890,16 +886,25 @@ function generateCard() {
 function downloadQR() {
   var hid = activeQR === 'adviser' ? 'qrHiddenAdviser' : 'qrHidden';
   var canvas = document.getElementById(hid).querySelector('canvas');
-  if (!canvas) { showToast('Génère d\'abord ta carte.'); return; }
+
+  if (!canvas) {
+    showToast('Génère d\'abord ta carte.');
+    return;
+  }
+
   var a = document.createElement('a');
-  var suffix = activeQR === 'adviser' ? 'conseiller' : (d.fn||'contact')+'-'+(d.ln||'kariban');
-  a.download = 'qr-'+suffix+'.png';
+  var suffix = activeQR === 'adviser'
+    ? 'conseiller'
+    : (d.fn || 'contact') + '-' + (d.ln || 'kariban');
+
+  a.download = 'qr-' + suffix + '.png';
   a.href = canvas.toDataURL('image/png');
   a.click();
+
   showToast('QR code téléchargé');
 }
 
-  function downloadVCF() {
+function downloadVCF() {
   var obj = activeQR === 'adviser' ? adviser : d;
   var vcard = buildVCard(obj);
 
@@ -932,6 +937,7 @@ function downloadQR() {
 function openInstallModal() {
   document.getElementById('installModal').classList.add('open');
 }
+
 function closeInstallModal(e) {
   if (!e || e.target === document.getElementById('installModal')) {
     document.getElementById('installModal').classList.remove('open');
@@ -940,57 +946,79 @@ function closeInstallModal(e) {
 
 function resetCard() {
   try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
-  d = {}; adviser = {};
+
+  d = {};
+  adviser = {};
+
   fillFormFromData();
+
   document.getElementById('cardBody').innerHTML = '';
   document.getElementById('cardName').textContent = 'Prénom Nom';
   document.getElementById('cardJob').textContent = '';
   document.getElementById('cardJob').style.display = 'none';
   document.getElementById('cardAvatar').textContent = 'KG';
+
   document.getElementById('qrCode').innerHTML = '';
   document.getElementById('qrHidden').innerHTML = '';
   document.getElementById('qrCodeAdviser').innerHTML = '';
   document.getElementById('qrHiddenAdviser').innerHTML = '';
   document.getElementById('qrTabs').style.display = 'none';
+
   var url = new URL(window.location.href);
   url.searchParams.delete('c');
+  url.searchParams.delete('view');
   window.history.replaceState({}, '', url.toString());
+
   goTo('viewHome');
   showToast('Carte réinitialisée');
 }
 
 function showToast(msg) {
   var t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+  t.textContent = msg;
+  t.classList.add('show');
+
+  setTimeout(function() {
+    t.classList.remove('show');
+  }, 2500);
 }
 
 function hasSavedCard() {
-  return !!(d.fn||d.ln||d.jt||d.p1||d.p2||d.em||d.wb||d.ad);
+  return !!(d.fn || d.ln || d.jt || d.p1 || d.p2 || d.em || d.wb || d.ad);
 }
 
 function restoreApp() {
   var qd = getDataFromQuery();
+
   if (qd) {
-    d = qd.d||{}; adviser = qd.adviser||{};
+    d = qd.d || {};
+    adviser = qd.adviser || {};
     saveData();
   } else {
     loadData();
   }
+
   fillFormFromData();
+
   if (hasSavedCard()) {
     if (!qd) updateShareUrl(true);
+
     renderCard();
+
     var initialView = getViewFromQuery();
-if (initialView === 'adviser' && hasAdviser()) {
-  switchQR('adviser');
-} else {
-  switchQR('me');
+    if (initialView === 'adviser' && hasAdviser()) {
+      switchQR('adviser');
+    } else {
+      switchQR('me');
+    }
+
+    goTo('viewCard');
+  } else {
+    goTo('viewHome');
+  }
 }
+
 document.addEventListener('DOMContentLoaded', function() {
   attachAutosave();
   restoreApp();
 });
-</script>
-</body>
-</html>
