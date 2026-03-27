@@ -728,18 +728,19 @@ function renderCard() {
   makeQR('qrHidden', buildVCard(d), 400);
 
   var tabs = document.getElementById('qrTabs');
-  if (hasAdviser()) {
-    tabs.style.display = 'flex';
-    var aName = (adviser.fn+' '+adviser.ln).trim()||'Conseiller(e)';
-    document.getElementById('adviserAvatar').textContent = ini(adviser);
-    document.getElementById('adviserName').textContent = aName;
-    document.getElementById('adviserJob').textContent = adviser.jt||'';
-    makeQR('qrCodeAdviser', buildVCard(adviser), 180);
-    makeQR('qrHiddenAdviser', buildVCard(adviser), 400);
-  } else {
-    tabs.style.display = 'none';
-    switchQR('me');
-  }
+if (hasAdviser()) {
+  tabs.style.display = 'flex';
+  var aName = (adviser.fn+' '+adviser.ln).trim() || 'Conseiller(e)';
+  document.getElementById('adviserAvatar').textContent = ini(adviser);
+  document.getElementById('adviserName').textContent = aName;
+  document.getElementById('adviserJob').textContent = adviser.jt || '';
+
+  // QR HD pour téléchargement
+  makeQR('qrHiddenAdviser', buildVCard(adviser), 400);
+} else {
+  tabs.style.display = 'none';
+  switchQR('me');
+}
 }
 
 function makeQR(elId, text, size) {
@@ -764,12 +765,30 @@ function makeQR(elId, text, size) {
 
 function switchQR(tab) {
   activeQR = tab;
-  document.getElementById('tabMe').classList.toggle('active', tab==='me');
-  document.getElementById('tabAdviser').classList.toggle('active', tab==='adviser');
-  document.getElementById('qrSectionMe').style.display = tab==='me' ? 'flex' : 'none';
-  document.getElementById('qrSectionAdviser').style.display = tab==='adviser' ? 'flex' : 'none';
+
+  document.getElementById('tabMe').classList.toggle('active', tab === 'me');
+  document.getElementById('tabAdviser').classList.toggle('active', tab === 'adviser');
+
+  document.getElementById('qrSectionMe').style.display = tab === 'me' ? 'flex' : 'none';
+  document.getElementById('qrSectionAdviser').style.display = tab === 'adviser' ? 'flex' : 'none';
+
+  if (tab === 'adviser' && hasAdviser()) {
+    // On génère le QR uniquement quand la zone devient visible
+    setTimeout(function() {
+      makeQR('qrCodeAdviser', buildVCard(adviser), 180);
+    }, 50);
+  }
+
+  if (tab === 'me') {
+    setTimeout(function() {
+      makeQR('qrCode', buildVCard(d), 180);
+    }, 50);
+  }
+
   var lbl = document.getElementById('btnDownloadLabel');
-  lbl.textContent = tab==='me' ? 'Télécharger mon QR code' : 'Télécharger le QR code conseiller';
+  lbl.textContent = tab === 'me'
+    ? 'Télécharger mon QR code'
+    : 'Télécharger le QR code conseiller';
 }
 
 function generateCard() {
@@ -777,6 +796,7 @@ function generateCard() {
   if (!d.fn && !d.ln) { showToast('Remplis au moins ton prénom ou nom.'); return; }
   updateShareUrl(true);
   renderCard();
+  switchQR('me');
   goTo('viewCard');
 }
 
