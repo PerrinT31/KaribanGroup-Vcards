@@ -748,6 +748,17 @@ function makeQR(elId, text, size) {
   el.innerHTML = '';
   try {
     new QRCode(el, { text:text, width:size, height:size, colorDark:'#000', colorLight:'#fff', correctLevel:QRCode.CorrectLevel.M });
+    // Force l'affichage du canvas, masque l'img générée par la lib
+    setTimeout(function() {
+      var img = el.querySelector('img');
+      var canvas = el.querySelector('canvas');
+      if (canvas) {
+        canvas.style.display = 'block';
+        if (img) img.style.display = 'none';
+      } else if (img) {
+        img.style.display = 'block';
+      }
+    }, 100);
   } catch(e) {}
 }
 
