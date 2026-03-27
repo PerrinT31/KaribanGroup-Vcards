@@ -1028,9 +1028,13 @@ function showToast(msg) {
 }
 
 function restoreApp() {
+  loadData();
+
   var qd = getDataFromQuery();
+  var hasLocalData = hasSavedCard();
 
   if (qd && qd.profile) {
+    // Mode partage / scan : on affiche seulement le profil demandé
     if (qd.type === 'adviser') {
       adviser = qd.profile || {};
       d = {};
@@ -1038,13 +1042,11 @@ function restoreApp() {
       d = qd.profile || {};
       adviser = {};
     }
-  } else {
-    loadData();
   }
 
   fillFormFromData();
 
-  if (hasSavedCard()) {
+  if (qd && qd.profile) {
     renderCard();
 
     var initialView = getViewFromQuery();
@@ -1054,6 +1056,14 @@ function restoreApp() {
       switchQR('me');
     }
 
+    goTo('viewCard');
+    return;
+  }
+
+  // Mode app locale : on garde les deux profils stockés
+  if (hasLocalData) {
+    renderCard();
+    switchQR('me');
     goTo('viewCard');
   } else {
     goTo('viewHome');
