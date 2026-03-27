@@ -649,10 +649,8 @@ function buildShareUrl() {
   url.searchParams.set('c', enc);
   return url.toString();
 }
-function updateShareUrl(silent) {
-  collectFormData();
-  if (!d.fn && !d.ln) { if (!silent) showToast('Remplis au moins ton prénom ou nom.'); return; }
-  window.history.replaceState({}, '', buildShareUrl());
+function buildShareUrl() {
+  return buildProfileUrl('me');
 }
 
 function fillFormFromData() {
@@ -780,7 +778,14 @@ function hasAdviser() {
 }
   
 function buildProfileUrl(type) {
-  var enc = encodeData({ d: d, adviser: adviser });
+  var profile = type === 'adviser' ? adviser : d;
+
+  var payload = {
+    profile: profile,
+    type: type || 'me'
+  };
+
+  var enc = encodeData(payload);
   var url = new URL(window.location.href);
   url.searchParams.set('c', enc);
   url.searchParams.set('view', type || 'me');
@@ -984,13 +989,25 @@ function showToast(msg) {
 }
 
 function hasSavedCard() {
-  return !!(d.fn || d.ln || d.jt || d.p1 || d.p2 || d.em || d.wb || d.ad);
+  return !!(
+    d.fn || d.ln || d.jt || d.p1 || d.p2 || d.em || d.wb || d.ad ||
+    adviser.fn || adviser.ln || adviser.jt || adviser.p1 || adviser.p2 || adviser.em || adviser.wb || adviser.ad
+  );
 }
 
 function restoreApp() {
   var qd = getDataFromQuery();
 
-  if (qd) {
+  if (qd && qd.profile) {
+    if (qd.type === 'adviser') {
+      adviser = qd.profile || {};
+      d = {};
+    } else {
+      d = qd.profile || {};
+      adviser = {};
+    }
+  } else if (qd && (qd.d || qd.adviser)) {
+    // Compatibilité avec ton ancien format
     d = qd.d || {};
     adviser = qd.adviser || {};
     saveData();
@@ -1000,9 +1017,7 @@ function restoreApp() {
 
   fillFormFromData();
 
-  if (hasSavedCard()) {
-    if (!qd) updateShareUrl(true);
-
+  if (hasSavedCard() || hasAdviser()) {
     renderCard();
 
     var initialView = getViewFromQuery();
