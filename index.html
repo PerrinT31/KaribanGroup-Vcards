@@ -3,30 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0a0a0f">
-
-<!-- iPhone / iOS -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Vcard">
-
-<!-- Android / Chrome -->
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="application-name" content="Vcard">
-
-<title>Kariban — Carte de visite digitale</title>
-
-<link rel="apple-touch-icon" sizes="180x180" href="/Cartedevisite.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/Cartedevisite.png">
-<link rel="icon" type="image/png" sizes="512x512" href="/Cartedevisite.png">
-<link rel="shortcut icon" href="/Cartedevisite.png">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-
+  <meta name="theme-color" content="#0c0c0c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Vcard">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Vcard">
+  <title>Kariban — Carte de visite digitale</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/Cartedevisite.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/Cartedevisite.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
   <style>
     :root {
       --bg: #0c0c0c;
@@ -40,998 +29,820 @@
       --radius: 14px;
       --radius-sm: 8px;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     html, body {
       min-height: 100%;
       background: var(--bg);
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
       -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
     }
-
     body { padding-bottom: env(safe-area-inset-bottom); }
-
     .view { display: none; min-height: 100vh; }
     .view.active { display: flex; flex-direction: column; }
 
     .nav {
-  padding: calc(env(safe-area-inset-top, 0px) + 18px) 20px 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-    .nav-logo svg {
-      display: block;
-      width: 250px;
-      max-width: 100%;
-      overflow: visible;
+      padding: calc(env(safe-area-inset-top, 0px) + 18px) 20px 0;
+      display: flex; align-items: center; justify-content: space-between;
     }
+    .nav-logo svg { display: block; width: 220px; max-width: 100%; overflow: visible; }
 
     .hero {
-      padding: 40px 24px 32px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 32px;
+      padding: 40px 24px 32px; flex: 1;
+      display: flex; flex-direction: column; justify-content: center; gap: 32px;
     }
-
-    .hero-headline {
-      font-size: clamp(28px, 7vw, 42px);
-      font-weight: 300;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-    }
-
+    .hero-headline { font-size: clamp(28px, 7vw, 42px); font-weight: 300; line-height: 1.15; letter-spacing: -0.02em; }
     .hero-headline strong { font-weight: 500; }
+    .hero-sub { font-size: 15px; color: var(--muted); line-height: 1.6; max-width: 340px; }
 
-    .hero-sub {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.6;
-      max-width: 340px;
-    }
-
-    .steps {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
+    .steps { display: flex; flex-direction: column; gap: 12px; }
     .step {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px 16px;
+      display: flex; align-items: center; gap: 14px;
+      background: var(--surface); border: 0.5px solid var(--border);
+      border-radius: var(--radius); padding: 14px 16px;
     }
-
     .step-num {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: var(--accent-bg);
-      border: 0.5px solid var(--border2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 500;
-      flex-shrink: 0;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--accent-bg); border: 0.5px solid var(--border2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 500; flex-shrink: 0;
     }
+    .step-text { font-size: 13px; color: var(--muted); line-height: 1.4; }
+    .step-text strong { color: var(--text); font-weight: 500; }
 
-    .step-text {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.4;
-    }
-
-    .step-text strong {
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    .btn-start,
-    .btn-generate,
-    .btn-secondary {
-      background: var(--text);
-      color: var(--bg);
-      border: none;
-      border-radius: var(--radius);
-      padding: 17px 24px;
-      font-size: 16px;
-      font-weight: 500;
-      font-family: 'DM Sans', sans-serif;
-      cursor: pointer;
-      width: 100%;
+    .btn-start, .btn-generate {
+      background: var(--text); color: var(--bg); border: none;
+      border-radius: var(--radius); padding: 17px 24px;
+      font-size: 16px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; width: 100%;
       transition: opacity 0.2s, transform 0.1s;
       -webkit-tap-highlight-color: transparent;
     }
-
-    .btn-secondary {
-      background: transparent;
-      color: var(--text);
-      border: 0.5px solid var(--border2);
-    }
-
-    .btn-start:hover,
-    .btn-generate:hover,
-    .btn-secondary:hover { opacity: 0.88; }
-
-    .btn-start:active,
-    .btn-generate:active,
-    .btn-secondary:active { transform: scale(0.98); }
+    .btn-start:active, .btn-generate:active { transform: scale(0.98); opacity: 0.88; }
 
     .form-header {
-  padding: calc(env(safe-area-inset-top, 0px) + 18px) 20px 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
+      padding: calc(env(safe-area-inset-top, 0px) + 18px) 20px 0;
+      display: flex; align-items: center; gap: 12px;
+    }
     .btn-back {
-      background: var(--surface);
-      border: 0.5px solid var(--border2);
-      color: var(--muted);
-      border-radius: var(--radius-sm);
-      padding: 8px 12px;
-      font-size: 13px;
-      cursor: pointer;
+      background: var(--surface); border: 0.5px solid var(--border2);
+      color: var(--muted); border-radius: var(--radius-sm);
+      padding: 8px 12px; font-size: 13px; cursor: pointer;
       font-family: 'DM Sans', sans-serif;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      display: flex; align-items: center; gap: 6px;
       -webkit-tap-highlight-color: transparent;
     }
-
-    .btn-back:hover { color: var(--text); }
-
-    .form-header-title {
-      font-size: 15px;
-      font-weight: 500;
-    }
+    .btn-back:active { opacity: 0.7; }
+    .form-header-title { font-size: 15px; font-weight: 500; }
 
     .form-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px 20px 100px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      flex: 1; overflow-y: auto; padding: 24px 20px 120px;
+      display: flex; flex-direction: column; gap: 8px;
     }
-
     .form-section {
-      font-size: 10px;
-      font-weight: 500;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 16px 0 8px;
+      font-size: 10px; font-weight: 500; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.08em; padding: 16px 0 8px;
     }
-
     .field-group {
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
+      background: var(--surface); border: 0.5px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
     }
-
     .field-row {
-      display: flex;
-      align-items: center;
-      border-bottom: 0.5px solid var(--border);
-      padding: 0 16px;
-      gap: 12px;
+      display: flex; align-items: center;
+      border-bottom: 0.5px solid var(--border); padding: 0 16px; gap: 12px;
     }
-
     .field-row:last-child { border-bottom: none; }
-
-    .field-label {
-      font-size: 13px;
-      color: var(--muted);
-      min-width: 90px;
-      padding: 14px 0;
-      flex-shrink: 0;
-    }
-
+    .field-label { font-size: 13px; color: var(--muted); min-width: 90px; padding: 14px 0; flex-shrink: 0; }
     .field-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text);
-      font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
-      padding: 14px 0;
-      appearance: none;
+      flex: 1; background: transparent; border: none; outline: none;
+      color: var(--text); font-size: 14px; font-family: 'DM Sans', sans-serif;
+      padding: 14px 0; appearance: none;
     }
-
     .field-input::placeholder { color: #3a3a4a; }
 
     .form-footer {
       padding: 16px 20px 32px;
       background: linear-gradient(transparent, var(--bg) 30%);
-      position: sticky;
-      bottom: 0;
-      display: grid;
-      gap: 10px;
+      position: sticky; bottom: 0; display: grid; gap: 10px;
     }
 
+    /* ── CARD VIEW ── */
     .card-view-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px 20px 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+      flex: 1; overflow-y: auto; padding: 20px 20px 40px;
+      display: flex; flex-direction: column; gap: 16px;
     }
-
     .digital-card {
-      background: var(--surface);
-      border: 0.5px solid var(--border2);
-      border-radius: 20px;
-      overflow: hidden;
+      background: var(--surface); border: 0.5px solid var(--border2);
+      border-radius: 20px; overflow: hidden;
     }
-
     .card-top {
-      background: #1e1e1e;
-      border-bottom: 0.5px solid var(--border2);
-      padding: 28px 24px 24px;
-      position: relative;
+      background: #1e1e1e; border-bottom: 0.5px solid var(--border2);
+      padding: 28px 24px 24px; position: relative;
     }
-
     .card-top-deco {
-      position: absolute;
-      top: -30px;
-      right: -30px;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.05);
-    }
-
-    .card-top-deco2 {
-      position: absolute;
-      bottom: -20px;
-      right: 20px;
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
+      position: absolute; top: -30px; right: -30px;
+      width: 120px; height: 120px; border-radius: 50%;
       background: rgba(255,255,255,0.04);
     }
-
     .card-avatar {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-      border: 2px solid rgba(255,255,255,0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      font-weight: 500;
-      color: #fff;
-      margin-bottom: 14px;
-      position: relative;
-      z-index: 1;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 500; color: #fff;
+      margin-bottom: 14px; position: relative; z-index: 1;
     }
-
-    .card-name {
-      font-size: 22px;
-      font-weight: 500;
-      color: #fff;
-      letter-spacing: -0.01em;
-      position: relative;
-      z-index: 1;
-    }
-
-    .card-job {
-      font-size: 13px;
-      color: rgba(255,255,255,0.75);
-      margin-top: 3px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .card-org {
-      font-size: 11px;
-      color: rgba(255,255,255,0.5);
-      margin-top: 2px;
-      position: relative;
-      z-index: 1;
-    }
+    .card-name { font-size: 22px; font-weight: 500; color: #fff; letter-spacing: -0.01em; position: relative; z-index: 1; }
+    .card-job { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: 3px; position: relative; z-index: 1; }
+    .card-org { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; position: relative; z-index: 1; }
 
     .card-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 13px 20px;
-      border-bottom: 0.5px solid var(--border);
+      display: flex; align-items: center; gap: 14px;
+      padding: 13px 20px; border-bottom: 0.5px solid var(--border);
     }
-
     .card-row:last-child { border-bottom: none; }
+    .card-row-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .card-row-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .card-row-val { font-size: 14px; color: var(--text); margin-top: 1px; word-break: break-word; }
 
-    .card-row-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+    /* ── QR TABS ── */
+    .qr-tabs {
+      display: flex; gap: 8px;
+      background: var(--surface); border: 0.5px solid var(--border2);
+      border-radius: var(--radius); padding: 6px;
     }
-
-    .card-row-label {
-      font-size: 10px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+    .qr-tab {
+      flex: 1; padding: 9px 12px; border-radius: 10px;
+      font-size: 13px; font-weight: 500; color: var(--muted);
+      background: transparent; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.15s, color 0.15s;
+      -webkit-tap-highlight-color: transparent;
     }
-
-    .card-row-val {
-      font-size: 14px;
-      color: var(--text);
-      margin-top: 1px;
-      word-break: break-word;
+    .qr-tab.active {
+      background: var(--surface2); color: var(--text);
+      border: 0.5px solid var(--border2);
     }
 
     .qr-section {
-      background: var(--surface);
-      border: 0.5px solid var(--border2);
-      border-radius: var(--radius);
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
+      background: var(--surface); border: 0.5px solid var(--border2);
+      border-radius: var(--radius); padding: 24px;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
     }
+    .qr-wrapper { background: #fff; border-radius: 12px; padding: 14px; display: inline-flex; }
+    .qr-label { font-size: 12px; color: var(--muted); text-align: center; line-height: 1.5; }
 
-    .qr-wrapper {
-      background: #fff;
-      border-radius: 12px;
-      padding: 14px;
-      display: inline-flex;
+    /* Conseiller form inline */
+    .adviser-form {
+      background: var(--surface); border: 0.5px solid var(--border2);
+      border-radius: var(--radius); overflow: hidden;
+      display: none;
     }
-
-    .qr-label {
-      font-size: 12px;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.5;
+    .adviser-form.open { display: block; }
+    .adviser-form-header {
+      padding: 14px 16px; border-bottom: 0.5px solid var(--border);
+      font-size: 12px; font-weight: 500; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.07em;
     }
 
     .action-btn {
-      background: var(--surface);
-      border: 0.5px solid var(--border2);
-      border-radius: var(--radius);
-      padding: 16px 14px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 14px;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      text-align: left;
-      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      background: var(--surface); border: 0.5px solid var(--border2);
+      border-radius: var(--radius); padding: 16px 14px;
+      display: flex; flex-direction: row; align-items: center; gap: 14px;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      text-align: left; width: 100%;
+      transition: background 0.15s, transform 0.1s;
       -webkit-tap-highlight-color: transparent;
-      width: 100%;
     }
-
-    .action-btn:hover {
-      background: var(--surface2);
-      border-color: var(--border2);
-    }
-
-    .action-btn:active { transform: scale(0.97); }
-
+    .action-btn:active { transform: scale(0.97); background: var(--surface2); }
     .action-btn-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      background: rgba(240,240,238,0.08);
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; background: rgba(240,240,238,0.08);
     }
+    .action-btn-label { font-size: 13px; font-weight: 500; color: var(--text); }
+    .action-btn-sub { font-size: 11px; color: var(--muted); }
 
-    .action-btn-label {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    .action-btn-sub {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
+    /* ── INSTALL BANNER ── */
     .install-banner {
-      background: var(--accent-bg);
-      border: 0.5px solid var(--border2);
-      border-radius: var(--radius);
-      padding: 16px;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
+      background: var(--accent-bg); border: 0.5px solid var(--border2);
+      border-radius: var(--radius); padding: 16px;
+      display: flex; gap: 12px; align-items: flex-start;
+      cursor: pointer; -webkit-tap-highlight-color: transparent;
     }
-
+    .install-banner:active { opacity: 0.85; }
     .install-banner-icon {
-      width: 36px;
-      height: 36px;
-      background: var(--surface2);
-      border: 0.5px solid var(--border2);
-      border-radius: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      width: 36px; height: 36px; background: var(--surface2);
+      border: 0.5px solid var(--border2); border-radius: 9px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-
-    .install-banner-title {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-
-    .install-banner-text {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.5;
+    .install-banner-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+    .install-banner-text { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .install-banner-cta {
+      font-size: 12px; color: var(--text); font-weight: 500;
+      margin-top: 6px; text-decoration: underline; text-underline-offset: 3px;
     }
 
     .btn-edit {
-      background: transparent;
-      border: 0.5px solid var(--border2);
-      color: var(--muted);
-      border-radius: var(--radius);
-      padding: 13px;
-      font-size: 14px;
-      font-weight: 500;
-      font-family: 'DM Sans', sans-serif;
-      cursor: pointer;
-      width: 100%;
-      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      background: transparent; border: 0.5px solid var(--border2);
+      color: var(--muted); border-radius: var(--radius); padding: 13px;
+      font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; width: 100%;
       -webkit-tap-highlight-color: transparent;
     }
-
-    .btn-edit:hover {
-      color: var(--text);
-      border-color: var(--border2);
-      background: rgba(255,255,255,0.02);
-    }
+    .btn-edit:active { opacity: 0.7; }
 
     .toast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
+      position: fixed; bottom: 30px; left: 50%;
       transform: translateX(-50%) translateY(20px);
-      background: var(--surface2);
-      border: 0.5px solid var(--border2);
-      border-radius: 100px;
-      padding: 10px 20px;
-      font-size: 13px;
-      color: var(--text);
-      opacity: 0;
-      transition: opacity 0.2s, transform 0.2s;
-      pointer-events: none;
-      white-space: nowrap;
-      z-index: 999;
+      background: var(--surface2); border: 0.5px solid var(--border2);
+      border-radius: 100px; padding: 10px 20px;
+      font-size: 13px; color: var(--text);
+      opacity: 0; transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none; white-space: nowrap; z-index: 999;
     }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
+    /* ── INSTALL MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.7);
+      align-items: flex-end; justify-content: center;
     }
+    .modal-overlay.open { display: flex; }
+    .modal-sheet {
+      background: #1a1a1a; border-radius: 20px 20px 0 0;
+      padding: 24px 24px calc(env(safe-area-inset-bottom, 0px) + 24px);
+      width: 100%; max-width: 480px;
+      border-top: 0.5px solid var(--border2);
+      animation: slideUp 0.25s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .modal-handle {
+      width: 36px; height: 4px; background: var(--border2);
+      border-radius: 2px; margin: 0 auto 20px;
+    }
+    .modal-title { font-size: 16px; font-weight: 500; margin-bottom: 6px; }
+    .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
 
-    @media (max-width: 380px) {
-      .nav-logo svg { width: 220px; }
-      .field-label { min-width: 76px; }
+    .install-steps { display: flex; flex-direction: column; gap: 0; }
+    .install-step {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding: 14px 0; border-bottom: 0.5px solid var(--border);
     }
+    .install-step:last-child { border-bottom: none; }
+    .install-step-visual {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--surface2); border: 0.5px solid var(--border2);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .install-step-label { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+    .install-step-sub { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    .btn-modal-close {
+      margin-top: 20px; width: 100%; padding: 15px;
+      background: var(--text); color: var(--bg); border: none;
+      border-radius: var(--radius); font-size: 15px; font-weight: 500;
+      font-family: 'DM Sans', sans-serif; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-modal-close:active { opacity: 0.88; transform: scale(0.98); }
   </style>
 </head>
 <body>
 
-  <div class="view" id="viewHome">
-    <nav class="nav">
-      <div class="nav-logo">
-        <svg width="250" height="24" viewBox="0 0 250 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Kariban Group">
-          <rect x="0" y="0" width="24" height="24" rx="8" fill="#f0f0ee"/>
-          <text x="12" y="16.2" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'DM Sans',sans-serif" font-size="11" font-weight="700" fill="#0c0c0c">KG</text>
-          <text x="36" y="17" font-family="-apple-system,BlinkMacSystemFont,'DM Sans',sans-serif" font-size="17" font-weight="700" letter-spacing="0.02em" fill="#f0f0ee">KARIBAN</text>
-          <line x1="130" y1="12" x2="158" y2="12" stroke="#f0f0ee" stroke-width="1"/>
-          <text x="166" y="17" font-family="Georgia, 'Times New Roman', serif" font-size="17" font-weight="400" letter-spacing="0.01em" fill="#f0f0ee">GROUP</text>
+<!-- VIEW : ACCUEIL -->
+<div class="view" id="viewHome">
+  <nav class="nav">
+    <div class="nav-logo">
+      <svg width="220" height="24" viewBox="0 0 220 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="24" height="24" rx="6" fill="#f0f0ee"/>
+        <text x="12" y="16.5" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'DM Sans',sans-serif" font-size="11" font-weight="700" fill="#0c0c0c">KG</text>
+        <text x="36" y="17" font-family="-apple-system,BlinkMacSystemFont,'DM Sans',sans-serif" font-size="17" font-weight="700" letter-spacing="0.02em" fill="#f0f0ee">KARIBAN</text>
+        <line x1="126" y1="12" x2="148" y2="12" stroke="rgba(240,240,238,0.3)" stroke-width="1"/>
+        <text x="156" y="17" font-family="Georgia,'Times New Roman',serif" font-size="17" font-weight="400" fill="#f0f0ee">GROUP</text>
+      </svg>
+    </div>
+  </nav>
+  <div class="hero">
+    <div>
+      <div class="hero-headline">Ta carte de visite<br><strong>toujours dans ta poche.</strong></div>
+      <div class="hero-sub" style="margin-top:12px;">Crée ta carte de visite virtuelle en 2 minutes. Partage ton QR code. Le client enregistre ton contact instantanément.</div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Remplis tes infos</strong> — nom, poste, téléphone, email...</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Ajoute cette carte</strong> sur l'écran d'accueil de ton téléphone</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Le client scanne le QR code</strong> et enregistre ton contact en 1 clic</div>
+      </div>
+    </div>
+    <button class="btn-start" onclick="goTo('viewForm')">Créer ma carte →</button>
+  </div>
+</div>
+
+<!-- VIEW : FORMULAIRE -->
+<div class="view" id="viewForm">
+  <div class="form-header">
+    <button class="btn-back" onclick="goTo('viewHome')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Retour
+    </button>
+    <div class="form-header-title">Mes informations</div>
+  </div>
+  <div class="form-scroll">
+    <div class="form-section">Identité</div>
+    <div class="field-group">
+      <div class="field-row">
+        <label class="field-label">Prénom</label>
+        <input class="field-input" id="fn" type="text" placeholder="Thomas" autocomplete="given-name">
+      </div>
+      <div class="field-row">
+        <label class="field-label">Nom</label>
+        <input class="field-input" id="ln" type="text" placeholder="Perrin" autocomplete="family-name">
+      </div>
+      <div class="field-row">
+        <label class="field-label">Poste</label>
+        <input class="field-input" id="jt" type="text" placeholder="Coordinateur Marketing" autocomplete="organization-title">
+      </div>
+    </div>
+    <div class="form-section">Contact</div>
+    <div class="field-group">
+      <div class="field-row">
+        <label class="field-label">Mobile</label>
+        <input class="field-input" id="p1" type="tel" placeholder="+33 6 XX XX XX XX" autocomplete="tel">
+      </div>
+      <div class="field-row">
+        <label class="field-label">Fixe</label>
+        <input class="field-input" id="p2" type="tel" placeholder="+33 X XX XX XX XX">
+      </div>
+      <div class="field-row">
+        <label class="field-label">Email</label>
+        <input class="field-input" id="em" type="text" placeholder="thomas.perrin@toptex.fr" autocomplete="email">
+      </div>
+    </div>
+    <div class="form-section">Autres</div>
+    <div class="field-group">
+      <div class="field-row">
+        <label class="field-label">Site web</label>
+        <input class="field-input" id="wb" type="text" placeholder="https://www.toptex.fr/">
+      </div>
+      <div class="field-row">
+        <label class="field-label">Adresse</label>
+        <input class="field-input" id="ad" type="text" placeholder="TopTex Group, 10 avenue du girou 31621 Castelnau-d'Estrétefonds">
+      </div>
+    </div>
+
+    <div class="form-section">Conseiller(e) commercial(e) <span style="color:var(--border2);font-size:9px;margin-left:4px;">OPTIONNEL</span></div>
+    <div class="field-group">
+      <div class="field-row">
+        <label class="field-label">Prénom</label>
+        <input class="field-input" id="afn" type="text" placeholder="Marie" autocomplete="given-name">
+      </div>
+      <div class="field-row">
+        <label class="field-label">Nom</label>
+        <input class="field-input" id="aln" type="text" placeholder="Dupont" autocomplete="family-name">
+      </div>
+      <div class="field-row">
+        <label class="field-label">Poste</label>
+        <input class="field-input" id="ajt" type="text" placeholder="Conseillère commerciale">
+      </div>
+      <div class="field-row">
+        <label class="field-label">Mobile</label>
+        <input class="field-input" id="ap1" type="tel" placeholder="+33 6 XX XX XX XX">
+      </div>
+      <div class="field-row">
+        <label class="field-label">Fixe</label>
+        <input class="field-input" id="ap2" type="tel" placeholder="+33 X XX XX XX XX">
+      </div>
+      <div class="field-row">
+        <label class="field-label">Email</label>
+        <input class="field-input" id="aem" type="text" placeholder="m.dupont@toptex.fr">
+      </div>
+      <div class="field-row">
+        <label class="field-label">Site web</label>
+        <input class="field-input" id="awb" type="text" placeholder="https://www.toptex.fr/">
+      </div>
+      <div class="field-row">
+        <label class="field-label">Adresse</label>
+        <input class="field-input" id="aad" type="text" placeholder="TopTex Group, 10 avenue du girou 31621 Castelnau-d'Estrétefonds">
+      </div>
+    </div>
+  </div>
+  <div class="form-footer">
+    <button class="btn-generate" onclick="generateCard()">Générer ma carte →</button>
+  </div>
+</div>
+
+<!-- VIEW : CARTE -->
+<div class="view" id="viewCard">
+  <div style="padding:calc(env(safe-area-inset-top, 0px) + 18px) 20px 0; display:flex; align-items:center; gap:12px;">
+    <button class="btn-back" onclick="goTo('viewForm')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Modifier
+    </button>
+    <div style="font-size:15px; font-weight:500;">Ma carte</div>
+  </div>
+
+  <div class="card-view-scroll">
+
+    <!-- Carte principale -->
+    <div class="digital-card">
+      <div class="card-top">
+        <div class="card-top-deco"></div>
+        <div class="card-avatar" id="cardAvatar">KG</div>
+        <div class="card-name" id="cardName">Prénom Nom</div>
+        <div class="card-job" id="cardJob"></div>
+        <div class="card-org">Kariban Group</div>
+      </div>
+      <div id="cardBody"></div>
+    </div>
+
+    <!-- Tabs QR -->
+    <div class="qr-tabs" id="qrTabs" style="display:none;">
+      <button class="qr-tab active" id="tabMe" onclick="switchQR('me')">Ma carte</button>
+      <button class="qr-tab" id="tabAdviser" onclick="switchQR('adviser')">Mon/ma conseiller(e)</button>
+    </div>
+
+    <!-- QR principal -->
+    <div class="qr-section" id="qrSectionMe">
+      <div class="qr-wrapper"><div id="qrCode"></div></div>
+      <div class="qr-label">Le client scanne ce QR code avec son iPhone<br>et enregistre le contact instantanément.</div>
+    </div>
+
+    <!-- QR conseiller -->
+    <div class="qr-section" id="qrSectionAdviser" style="display:none;">
+      <div class="card-top" style="width:100%;border-radius:12px;margin-bottom:4px;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:#fff;flex-shrink:0;" id="adviserAvatar">?</div>
+          <div>
+            <div style="font-size:15px;font-weight:500;color:#fff;" id="adviserName">—</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px;" id="adviserJob"></div>
+          </div>
+        </div>
+      </div>
+      <div class="qr-wrapper"><div id="qrCodeAdviser"></div></div>
+      <div class="qr-label">QR code de votre conseiller(e)<br>à faire scanner par le client.</div>
+    </div>
+
+    <!-- Téléchargement -->
+    <button class="action-btn" id="btnDownloadQR" onclick="downloadQR()">
+      <div class="action-btn-icon">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M9 3v9M6 10l3 3 3-3" stroke="#f0f0ee" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 14h12" stroke="#f0f0ee" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </div>
-    </nav>
-
-    <div class="hero">
       <div>
-        <div class="hero-headline">Ta carte de visite<br><strong>toujours dans ta poche.</strong></div>
-        <div class="hero-sub" style="margin-top:12px;">Crée ta carte de visite virtuelle, génère une URL durable, partage ton QR code. Le client enregistre ton contact instantanément.</div>
+        <div class="action-btn-label" id="btnDownloadLabel">Télécharger mon QR code</div>
+        <div class="action-btn-sub">Image .png — pour signature email, impression...</div>
       </div>
+    </button>
 
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-text"><strong>Remplis tes infos</strong> — nom, poste, téléphone, email...</div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-text"><strong>Génère ta carte</strong> — l’URL mémorise aussi les données</div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-text"><strong>Ajoute l’app à l’écran d’accueil de ton smartphone</strong> — La carte reste retrouvable en quelques secondes</div>
-        </div>
-      </div>
-
-      <button class="btn-start" onclick="goTo('viewForm')">Créer ma carte →</button>
-    </div>
-  </div>
-
-  <div class="view" id="viewForm">
-    <div class="form-header">
-      <button class="btn-back" onclick="goTo('viewHome')">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Banner install -->
+    <div class="install-banner" onclick="openInstallModal()">
+      <div class="install-banner-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="2" y="4" width="11" height="14" rx="2" stroke="white" stroke-width="1.3"/>
+          <path d="M7 1h6a2 2 0 012 2v14a2 2 0 01-2 2H7" stroke="white" stroke-width="1.3" stroke-dasharray="2 2"/>
+          <path d="M10 8v5M8 11l2 2 2-2" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Retour
-      </button>
-      <div class="form-header-title">Mes informations</div>
-    </div>
-
-    <div class="form-scroll">
-      <div class="form-section">Identité</div>
-      <div class="field-group">
-        <div class="field-row">
-          <label class="field-label">Prénom</label>
-          <input class="field-input" id="fn" type="text" placeholder="Thomas" autocomplete="given-name">
-        </div>
-        <div class="field-row">
-          <label class="field-label">Nom</label>
-          <input class="field-input" id="ln" type="text" placeholder="Perrin" autocomplete="family-name">
-        </div>
-        <div class="field-row">
-          <label class="field-label">Poste</label>
-          <input class="field-input" id="jt" type="text" placeholder="Coordinateur Marketing" autocomplete="organization-title">
-        </div>
       </div>
-
-      <div class="form-section">Contact</div>
-      <div class="field-group">
-        <div class="field-row">
-          <label class="field-label">Mobile</label>
-          <input class="field-input" id="p1" type="tel" placeholder="+33 6 XX XX XX XX" autocomplete="tel">
-        </div>
-        <div class="field-row">
-          <label class="field-label">Fixe</label>
-          <input class="field-input" id="p2" type="tel" placeholder="+33 X XX XX XX XX">
-        </div>
-        <div class="field-row">
-          <label class="field-label">Email</label>
-          <input class="field-input" id="em" type="email" placeholder="thomas.perrin@toptex.fr" autocomplete="email">
-        </div>
-      </div>
-
-      <div class="form-section">Autres</div>
-      <div class="field-group">
-        <div class="field-row">
-          <label class="field-label">Site web</label>
-          <input class="field-input" id="wb" type="url" placeholder="https://www.toptex.com/">
-        </div>
-        <div class="field-row">
-          <label class="field-label">Adresse</label>
-          <input class="field-input" id="ad" type="text" placeholder="Kariban Group, 10 avenue du Girou 31620 Castelnau-d'Estrétefonds">
-        </div>
+      <div>
+        <div class="install-banner-title">Ajouter à l'écran d'accueil iPhone</div>
+        <div class="install-banner-text">Accède à ta carte en 1 tap, sans ouvrir le navigateur.</div>
+        <div class="install-banner-cta">Voir comment faire →</div>
       </div>
     </div>
 
-    <div class="form-footer">
-      <button class="btn-generate" onclick="generateCard()">Générer ma carte →</button>
-    </div>
+    <button class="btn-edit" onclick="goTo('viewForm')">Modifier mes informations</button>
+    <button class="btn-edit" onclick="resetCard()" style="margin-top:8px;">Réinitialiser ma carte</button>
   </div>
+</div>
 
-  <div class="view" id="viewCard">
-<div style="padding:calc(env(safe-area-inset-top, 0px) + 18px) 20px 0; display:flex; align-items:center; gap:12px;">
-  <button class="btn-back" onclick="goTo('viewForm')">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Modifier
-      </button>
-      <div style="font-size:15px; font-weight:500;">Ma carte</div>
-    </div>
+<!-- MODAL INSTALL -->
+<div class="modal-overlay" id="installModal" onclick="closeInstallModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Ajouter à l'écran d'accueil</div>
+    <div class="modal-sub">Suis ces 3 étapes dans Safari sur ton iPhone pour avoir ta carte en accès direct.</div>
 
-    <div class="card-view-scroll">
-      <div class="digital-card">
-        <div class="card-top">
-          <div class="card-top-deco"></div>
-          <div class="card-top-deco2"></div>
-          <div class="card-avatar" id="cardAvatar">KG</div>
-          <div class="card-name" id="cardName">Prénom Nom</div>
-          <div class="card-job" id="cardJob"></div>
-          <div class="card-org">Kariban Group</div>
-        </div>
-        <div class="card-body" id="cardBody"></div>
-      </div>
-
-      <div class="qr-section">
-        <div class="qr-wrapper"><div id="qrCode"></div></div>
-        <div class="qr-label">Le client scanne ce QR code avec son smartphone<br>et enregistre le contact instantanément.</div>
-      </div>
-
-      <button class="action-btn" onclick="downloadQR()">
-        <div class="action-btn-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path d="M9 3v9M6 10l3 3 3-3" stroke="#f0f0ee" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M3 14h12" stroke="#f0f0ee" stroke-width="1.5" stroke-linecap="round"/>
+    <div class="install-steps">
+      <div class="install-step">
+        <div class="install-step-visual">
+          <!-- Icône Safari + barre du bas -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect x="3" y="6" width="22" height="18" rx="3" stroke="#f0f0ee" stroke-width="1.3"/>
+            <path d="M3 10h22" stroke="#f0f0ee" stroke-width="1.3"/>
+            <circle cx="6.5" cy="8" r="1" fill="#f0f0ee" opacity=".4"/>
+            <circle cx="10" cy="8" r="1" fill="#f0f0ee" opacity=".4"/>
+            <rect x="13" y="6.5" width="9" height="3" rx="1.5" stroke="#f0f0ee" stroke-width="1" opacity=".4"/>
+            <!-- icône partager en bas -->
+            <rect x="11" y="20" width="6" height="1.2" rx=".6" fill="#f0f0ee"/>
+            <path d="M14 16v5" stroke="#f0f0ee" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M12 18l2-2 2 2" stroke="#f0f0ee" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
         <div>
-          <div class="action-btn-label">Télécharger mon QR code</div>
-          <div class="action-btn-sub">Image .png — pour signature email, impression...</div>
-        </div>
-      </button>
-
-      <div class="install-banner">
-        <div class="install-banner-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <rect x="3" y="3" width="14" height="14" rx="3" stroke="white" stroke-width="1.5"/>
-            <path d="M10 7v6M7 10l3 3 3-3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div>
-          <div class="install-banner-title">Ajouter à l'écran d'accueil</div>
-          <div class="install-banner-text">Dans Safari → icône Partager → <em>"Sur l'écran d'accueil"</em>. Ta carte devient une app — ouvrable en 1 tap pour faire flasher ton QR.</div>
+          <div class="install-step-label">Ouvre cette page dans Safari</div>
+          <div class="install-step-sub">Assure-toi d'utiliser Safari — pas Chrome ni un autre navigateur.</div>
         </div>
       </div>
 
-      <button class="btn-edit" onclick="goTo('viewForm')">Modifier mes informations</button>
-      <button class="btn-edit" onclick="resetCard()" style="margin-top:10px;">Réinitialiser ma carte</button>
+      <div class="install-step">
+        <div class="install-step-visual">
+          <!-- Icône Partager iOS -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M14 5v12" stroke="#f0f0ee" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M10 9l4-4 4 4" stroke="#f0f0ee" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 14H6a1 1 0 00-1 1v6a1 1 0 001 1h16a1 1 0 001-1v-6a1 1 0 00-1-1h-2" stroke="#f0f0ee" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="install-step-label">Appuie sur l'icône Partager</div>
+          <div class="install-step-sub">C'est le bouton avec la flèche vers le haut, en bas de l'écran Safari.</div>
+        </div>
+      </div>
+
+      <div class="install-step">
+        <div class="install-step-visual">
+          <!-- Icône "Sur l'écran d'accueil" -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect x="5" y="5" width="18" height="18" rx="4" stroke="#f0f0ee" stroke-width="1.3"/>
+            <path d="M14 10v8M10 14h8" stroke="#f0f0ee" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="install-step-label">Choisis "Sur l'écran d'accueil"</div>
+          <div class="install-step-sub">Fais défiler le menu vers le bas, appuie sur cette option puis sur "Ajouter".</div>
+        </div>
+      </div>
     </div>
+
+    <button class="btn-modal-close" onclick="closeInstallModal()">C'est compris ✓</button>
   </div>
+</div>
 
-  <div class="toast" id="toast"></div>
-  <div id="qrHidden" style="position:absolute;left:-9999px;top:0;"></div>
+<div class="toast" id="toast"></div>
+<div id="qrHidden" style="position:absolute;left:-9999px;top:0;"></div>
+<div id="qrHiddenAdviser" style="position:absolute;left:-9999px;top:0;"></div>
 
-  <script>
-    var d = {};
-    var STORAGE_KEY = 'kariban_vcard_data_v3';
+<script>
+var d = {};
+var adviser = {};
+var activeQR = 'me';
+var STORAGE_KEY = 'kariban_vcard_data_v4';
 
-    function val(id) {
-      var el = document.getElementById(id);
-      return el ? el.value.trim() : '';
-    }
+function val(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
 
-    function escapeHtml(str) {
-      return String(str || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
+function escapeHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escapeVC(s) {
+  return String(s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/;/g,'\\;').replace(/,/g,'\\,');
+}
 
-    function escapeVCard(str) {
-      return String(str || '')
-        .replace(/\\/g, '\\\\')
-        .replace(/\n/g, '\\n')
-        .replace(/;/g, '\\;')
-        .replace(/,/g, '\\,');
-    }
+function saveData() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({d:d, adviser:adviser})); } catch(e) {}
+}
+function loadData() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) { var p = JSON.parse(raw); d = p.d||{}; adviser = p.adviser||{}; }
+  } catch(e) { d={}; adviser={}; }
+}
 
-    function saveData() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
-    }
+function encodeData(data) {
+  try { return btoa(unescape(encodeURIComponent(JSON.stringify(data)))); } catch(e) { return ''; }
+}
+function decodeData(enc) {
+  try { return JSON.parse(decodeURIComponent(escape(atob(enc)))); } catch(e) { return null; }
+}
+function getDataFromQuery() {
+  var p = new URLSearchParams(window.location.search);
+  var c = p.get('c'); if (!c) return null;
+  return decodeData(c);
+}
+function buildShareUrl() {
+  var enc = encodeData({d:d, adviser:adviser});
+  var url = new URL(window.location.href);
+  url.searchParams.set('c', enc);
+  return url.toString();
+}
+function updateShareUrl(silent) {
+  collectFormData();
+  if (!d.fn && !d.ln) { if (!silent) showToast('Remplis au moins ton prénom ou nom.'); return; }
+  window.history.replaceState({}, '', buildShareUrl());
+}
 
-    function loadData() {
-      try {
-        var raw = localStorage.getItem(STORAGE_KEY);
-        d = raw ? JSON.parse(raw) : {};
-      } catch (e) {
-        d = {};
-      }
-    }
+function fillFormFromData() {
+  ['fn','ln','jt','p1','p2','em','wb','ad'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = d[id]||'';
+  });
+  ['fn','ln','jt','p1','p2','em','wb','ad'].forEach(function(id) {
+    var el = document.getElementById('a'+id);
+    if (el) el.value = adviser[id]||'';
+  });
+}
+function collectFormData() {
+  d = { fn:val('fn'),ln:val('ln'),jt:val('jt'),p1:val('p1'),p2:val('p2'),em:val('em'),wb:val('wb'),ad:val('ad') };
+  adviser = { fn:val('afn'),ln:val('aln'),jt:val('ajt'),p1:val('ap1'),p2:val('ap2'),em:val('aem'),wb:val('awb'),ad:val('aad') };
+  saveData();
+}
+function attachAutosave() {
+  ['fn','ln','jt','p1','p2','em','wb','ad','afn','aln','ajt','ap1','ap2','aem','awb','aad'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', collectFormData);
+    el.addEventListener('change', collectFormData);
+  });
+}
 
-    function encodeDataToUrl(data) {
-      try {
-        return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-      } catch (e) {
-        return '';
-      }
-    }
+function goTo(id) {
+  document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+  var t = document.getElementById(id);
+  if (t) t.classList.add('active');
+  window.scrollTo(0,0);
+}
 
-    function decodeDataFromUrl(encoded) {
-      try {
-        return JSON.parse(decodeURIComponent(escape(atob(encoded))));
-      } catch (e) {
-        return null;
-      }
-    }
+function ini(obj) {
+  var f = (obj||d).fn||'', l = (obj||d).ln||'';
+  return ((f[0]||'')+(l[0]||'')).toUpperCase()||'KG';
+}
 
-    function getDataFromQuery() {
-      var params = new URLSearchParams(window.location.search);
-      var encoded = params.get('c');
-      if (!encoded) return null;
-      return decodeDataFromUrl(encoded);
-    }
+function buildVCard(obj) {
+  var o = obj||d;
+  var lines = ['BEGIN:VCARD','VERSION:3.0'];
+  if (o.fn||o.ln) {
+    lines.push('N:'+escapeVC(o.ln)+';'+escapeVC(o.fn)+';;;');
+    lines.push('FN:'+escapeVC((o.fn+' '+o.ln).trim()));
+  }
+  if (o.jt) lines.push('TITLE:'+escapeVC(o.jt));
+  lines.push('ORG:Kariban Group');
+  if (o.p1) lines.push('TEL;TYPE=CELL:'+escapeVC(o.p1));
+  if (o.p2) lines.push('TEL;TYPE=WORK:'+escapeVC(o.p2));
+  if (o.em) lines.push('EMAIL;TYPE=INTERNET:'+escapeVC(o.em));
+  if (o.wb) lines.push('URL:'+escapeVC(o.wb));
+  if (o.ad) lines.push('ADR:;;'+escapeVC(o.ad)+';;;;');
+  lines.push('END:VCARD');
+  return lines.join('\n');
+}
 
-    function buildShareUrl() {
-      var encoded = encodeDataToUrl(d);
-      var url = new URL(window.location.href);
-      url.searchParams.set('c', encoded);
-      return url.toString();
-    }
+function phoneIcon(c) { return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 10.5c-.9-.5-1.8-.4-2.5.1l-.8.5C8.5 10.4 7 8.9 6.5 7.7l.5-.8c.5-.7.6-1.6.1-2.5L6.2 3c-.4-.7-1.3-1-2-.6L3 3.2c-.9.7-1.1 1.8-.5 3 1.3 2.8 4.5 6 7.3 7.3 1.2.6 2.3.4 3-.5l.8-1.2c.4-.7.2-1.6-.6-2z" fill="'+(c||'#34C759')+'"/></svg>'; }
+function emailIcon() { return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3.5" width="14" height="9" rx="1.5" stroke="#007AFF" stroke-width="1.2"/><path d="M1 5l7 5 7-5" stroke="#007AFF" stroke-width="1.2"/></svg>'; }
+function webIcon()   { return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#5856D6" stroke-width="1.2"/><path d="M8 1.5c-2 2-2 11 0 13M8 1.5c2 2 2 11 0 13M1.5 8h13" stroke="#5856D6" stroke-width="1.2"/></svg>'; }
+function mapIcon()   { return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8 4.5 8s4.5-4.5 4.5-8c0-2.5-2-4.5-4.5-4.5z" stroke="#FF9500" stroke-width="1.2"/><circle cx="8" cy="6" r="1.5" stroke="#FF9500" stroke-width="1.2"/></svg>'; }
 
-    function updateShareUrl(silent) {
-      collectFormData();
+function row(bg, icon, label, value) {
+  return '<div class="card-row"><div class="card-row-icon" style="background:'+bg+'20;">'+icon+'</div><div><div class="card-row-label">'+escapeHtml(label)+'</div><div class="card-row-val">'+escapeHtml(value)+'</div></div></div>';
+}
 
-      if (!d.fn && !d.ln) {
-        if (!silent) showToast('Remplis au moins ton prénom ou nom.');
-        return;
-      }
+function hasAdviser() {
+  return !!(adviser.fn||adviser.ln||adviser.p1||adviser.em);
+}
 
-      var shareUrl = buildShareUrl();
-      window.history.replaceState({}, '', shareUrl);
+function renderCard() {
+  document.getElementById('cardAvatar').textContent = ini(d);
+  document.getElementById('cardName').textContent = (d.fn+' '+d.ln).trim()||'Prénom Nom';
+  document.getElementById('cardJob').textContent = d.jt||'';
+  document.getElementById('cardJob').style.display = d.jt ? '' : 'none';
 
-      if (!silent) {
-        showToast('URL de la carte mise à jour');
-      }
-    }
+  var body = '';
+  if (d.p1) body += row('#34C759', phoneIcon(), 'Mobile', d.p1);
+  if (d.p2) body += row('#34C759', phoneIcon(), 'Fixe', d.p2);
+  if (d.em) body += row('#007AFF', emailIcon(), 'Email', d.em);
+  if (d.wb) body += row('#5856D6', webIcon(), 'Web', d.wb);
+  if (d.ad) body += row('#FF9500', mapIcon(), 'Adresse', d.ad);
+  document.getElementById('cardBody').innerHTML = body;
 
-    function fillFormFromData() {
-      document.getElementById('fn').value = d.fn || '';
-      document.getElementById('ln').value = d.ln || '';
-      document.getElementById('jt').value = d.jt || '';
-      document.getElementById('p1').value = d.p1 || '';
-      document.getElementById('p2').value = d.p2 || '';
-      document.getElementById('em').value = d.em || '';
-      document.getElementById('wb').value = d.wb || '';
-      document.getElementById('ad').value = d.ad || '';
-    }
+  makeQR('qrCode', buildVCard(d), 180);
+  makeQR('qrHidden', buildVCard(d), 400);
 
-    function collectFormData() {
-      d = {
-        fn: val('fn'),
-        ln: val('ln'),
-        jt: val('jt'),
-        p1: val('p1'),
-        p2: val('p2'),
-        em: val('em'),
-        wb: val('wb'),
-        ad: val('ad')
-      };
-      saveData();
-    }
+  var tabs = document.getElementById('qrTabs');
+  if (hasAdviser()) {
+    tabs.style.display = 'flex';
+    var aName = (adviser.fn+' '+adviser.ln).trim()||'Conseiller(e)';
+    document.getElementById('adviserAvatar').textContent = ini(adviser);
+    document.getElementById('adviserName').textContent = aName;
+    document.getElementById('adviserJob').textContent = adviser.jt||'';
+    makeQR('qrCodeAdviser', buildVCard(adviser), 180);
+    makeQR('qrHiddenAdviser', buildVCard(adviser), 400);
+  } else {
+    tabs.style.display = 'none';
+    switchQR('me');
+  }
+}
 
-    function attachAutosave() {
-      ['fn', 'ln', 'jt', 'p1', 'p2', 'em', 'wb', 'ad'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (!el) return;
-        el.addEventListener('input', function() {
-          collectFormData();
-        });
-        el.addEventListener('change', function() {
-          collectFormData();
-        });
-      });
-    }
+function makeQR(elId, text, size) {
+  var el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = '';
+  try {
+    new QRCode(el, { text:text, width:size, height:size, colorDark:'#000', colorLight:'#fff', correctLevel:QRCode.CorrectLevel.M });
+  } catch(e) {}
+}
 
-    function goTo(id) {
-      document.querySelectorAll('.view').forEach(function(v) {
-        v.classList.remove('active');
-      });
+function switchQR(tab) {
+  activeQR = tab;
+  document.getElementById('tabMe').classList.toggle('active', tab==='me');
+  document.getElementById('tabAdviser').classList.toggle('active', tab==='adviser');
+  document.getElementById('qrSectionMe').style.display = tab==='me' ? 'flex' : 'none';
+  document.getElementById('qrSectionAdviser').style.display = tab==='adviser' ? 'flex' : 'none';
+  var lbl = document.getElementById('btnDownloadLabel');
+  lbl.textContent = tab==='me' ? 'Télécharger mon QR code' : 'Télécharger le QR code conseiller';
+}
 
-      var target = document.getElementById(id);
-      if (target) target.classList.add('active');
+function generateCard() {
+  collectFormData();
+  if (!d.fn && !d.ln) { showToast('Remplis au moins ton prénom ou nom.'); return; }
+  updateShareUrl(true);
+  renderCard();
+  goTo('viewCard');
+}
 
-      window.scrollTo(0, 0);
-    }
+function downloadQR() {
+  var hid = activeQR === 'adviser' ? 'qrHiddenAdviser' : 'qrHidden';
+  var canvas = document.getElementById(hid).querySelector('canvas');
+  if (!canvas) { showToast('Génère d\'abord ta carte.'); return; }
+  var a = document.createElement('a');
+  var suffix = activeQR === 'adviser' ? 'conseiller' : (d.fn||'contact')+'-'+(d.ln||'kariban');
+  a.download = 'qr-'+suffix+'.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+  showToast('QR code téléchargé');
+}
 
-    function ini() {
-      var f = d.fn || '';
-      var l = d.ln || '';
-      return ((f[0] || '') + (l[0] || '')).toUpperCase() || 'KG';
-    }
+function openInstallModal() {
+  document.getElementById('installModal').classList.add('open');
+}
+function closeInstallModal(e) {
+  if (!e || e.target === document.getElementById('installModal')) {
+    document.getElementById('installModal').classList.remove('open');
+  }
+}
 
-    function buildVCard() {
-      var lines = ['BEGIN:VCARD', 'VERSION:3.0'];
+function resetCard() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  d = {}; adviser = {};
+  fillFormFromData();
+  document.getElementById('cardBody').innerHTML = '';
+  document.getElementById('cardName').textContent = 'Prénom Nom';
+  document.getElementById('cardJob').textContent = '';
+  document.getElementById('cardJob').style.display = 'none';
+  document.getElementById('cardAvatar').textContent = 'KG';
+  document.getElementById('qrCode').innerHTML = '';
+  document.getElementById('qrHidden').innerHTML = '';
+  document.getElementById('qrCodeAdviser').innerHTML = '';
+  document.getElementById('qrHiddenAdviser').innerHTML = '';
+  document.getElementById('qrTabs').style.display = 'none';
+  var url = new URL(window.location.href);
+  url.searchParams.delete('c');
+  window.history.replaceState({}, '', url.toString());
+  goTo('viewHome');
+  showToast('Carte réinitialisée');
+}
 
-      if (d.fn || d.ln) {
-        lines.push('N:' + escapeVCard(d.ln) + ';' + escapeVCard(d.fn) + ';;;');
-        lines.push('FN:' + escapeVCard((d.fn + ' ' + d.ln).trim()));
-      }
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
 
-      if (d.jt) lines.push('TITLE:' + escapeVCard(d.jt));
-      lines.push('ORG:Kariban Group');
-      if (d.p1) lines.push('TEL;TYPE=CELL:' + escapeVCard(d.p1));
-      if (d.p2) lines.push('TEL;TYPE=WORK:' + escapeVCard(d.p2));
-      if (d.em) lines.push('EMAIL;TYPE=INTERNET:' + escapeVCard(d.em));
-      if (d.wb) lines.push('URL:' + escapeVCard(d.wb));
-      if (d.ad) lines.push('ADR:;;' + escapeVCard(d.ad) + ';;;;');
-      lines.push('END:VCARD');
+function hasSavedCard() {
+  return !!(d.fn||d.ln||d.jt||d.p1||d.p2||d.em||d.wb||d.ad);
+}
 
-      return lines.join('\n');
-    }
+function restoreApp() {
+  var qd = getDataFromQuery();
+  if (qd) {
+    d = qd.d||{}; adviser = qd.adviser||{};
+    saveData();
+  } else {
+    loadData();
+  }
+  fillFormFromData();
+  if (hasSavedCard()) {
+    if (!qd) updateShareUrl(true);
+    renderCard();
+    goTo('viewCard');
+  } else {
+    goTo('viewHome');
+  }
+}
 
-    function row(bg, icon, label, value) {
-      return '<div class="card-row"><div class="card-row-icon" style="background:' + bg + '20;">' + icon + '</div><div><div class="card-row-label">' + escapeHtml(label) + '</div><div class="card-row-val">' + escapeHtml(value) + '</div></div></div>';
-    }
-
-    function phoneIcon() {
-      return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 10.5c-.9-.5-1.8-.4-2.5.1l-.8.5C8.5 10.4 7 8.9 6.5 7.7l.5-.8c.5-.7.6-1.6.1-2.5L6.2 3c-.4-.7-1.3-1-2-.6L3 3.2c-.9.7-1.1 1.8-.5 3 1.3 2.8 4.5 6 7.3 7.3 1.2.6 2.3.4 3-.5l.8-1.2c.4-.7.2-1.6-.6-2z" fill="#34C759"/></svg>';
-    }
-
-    function emailIcon() {
-      return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3.5" width="14" height="9" rx="1.5" stroke="#007AFF" stroke-width="1.2"/><path d="M1 5l7 5 7-5" stroke="#007AFF" stroke-width="1.2"/></svg>';
-    }
-
-    function webIcon() {
-      return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#5856D6" stroke-width="1.2"/><path d="M8 1.5c-2 2-2 11 0 13M8 1.5c2 2 2 11 0 13M1.5 8h13" stroke="#5856D6" stroke-width="1.2"/></svg>';
-    }
-
-    function mapIcon() {
-      return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8 4.5 8s4.5-4.5 4.5-8c0-2.5-2-4.5-4.5-4.5z" stroke="#FF9500" stroke-width="1.2"/><circle cx="8" cy="6" r="1.5" stroke="#FF9500" stroke-width="1.2"/></svg>';
-    }
-
-    function renderCard() {
-      document.getElementById('cardAvatar').textContent = ini();
-      document.getElementById('cardName').textContent = (d.fn + ' ' + d.ln).trim() || 'Prénom Nom';
-      document.getElementById('cardJob').textContent = d.jt || '';
-      document.getElementById('cardJob').style.display = d.jt ? '' : 'none';
-
-      var body = '';
-      if (d.p1) body += row('#34C759', phoneIcon(), 'Mobile', d.p1);
-      if (d.p2) body += row('#34C759', phoneIcon(), 'Fixe', d.p2);
-      if (d.em) body += row('#007AFF', emailIcon(), 'Email', d.em);
-      if (d.wb) body += row('#5856D6', webIcon(), 'Web', d.wb);
-      if (d.ad) body += row('#FF9500', mapIcon(), 'Adresse', d.ad);
-      document.getElementById('cardBody').innerHTML = body;
-
-      var vc = buildVCard();
-
-      var qrEl = document.getElementById('qrCode');
-      qrEl.innerHTML = '';
-      new QRCode(qrEl, {
-        text: vc,
-        width: 180,
-        height: 180,
-        colorDark: '#000',
-        colorLight: '#fff',
-        correctLevel: QRCode.CorrectLevel.M
-      });
-
-      var hidden = document.getElementById('qrHidden');
-      hidden.innerHTML = '';
-      new QRCode(hidden, {
-        text: vc,
-        width: 400,
-        height: 400,
-        colorDark: '#000',
-        colorLight: '#fff',
-        correctLevel: QRCode.CorrectLevel.M
-      });
-    }
-
-    function generateCard() {
-      collectFormData();
-
-      if (!d.fn && !d.ln) {
-        showToast('Remplis au moins ton prénom ou nom.');
-        return;
-      }
-
-      updateShareUrl(true);
-      renderCard();
-      goTo('viewCard');
-    }
-
-    function downloadQR() {
-      var canvas = document.getElementById('qrHidden').querySelector('canvas');
-      if (!canvas) {
-        showToast('Génère d’abord ta carte.');
-        return;
-      }
-
-      var a = document.createElement('a');
-      a.download = 'qr-' + (d.fn || 'contact') + '-' + (d.ln || 'kariban') + '.png';
-      a.href = canvas.toDataURL('image/png');
-      a.click();
-      showToast('QR code téléchargé');
-    }
-
-    function copyCurrentUrl() {
-      var url = buildShareUrl();
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(function() {
-          showToast('URL de la carte copiée');
-        }).catch(function() {
-          fallbackCopy(url);
-        });
-      } else {
-        fallbackCopy(url);
-      }
-    }
-
-    function fallbackCopy(text) {
-      var input = document.createElement('textarea');
-      input.value = text;
-      document.body.appendChild(input);
-      input.select();
-      document.execCommand('copy');
-      document.body.removeChild(input);
-      showToast('URL de la carte copiée');
-    }
-
-    function resetCard() {
-      localStorage.removeItem(STORAGE_KEY);
-      d = {};
-      fillFormFromData();
-      document.getElementById('cardBody').innerHTML = '';
-      document.getElementById('cardName').textContent = 'Prénom Nom';
-      document.getElementById('cardJob').textContent = '';
-      document.getElementById('cardJob').style.display = 'none';
-      document.getElementById('cardAvatar').textContent = 'KG';
-      document.getElementById('qrCode').innerHTML = '';
-      document.getElementById('qrHidden').innerHTML = '';
-
-      var cleanUrl = new URL(window.location.href);
-      cleanUrl.searchParams.delete('c');
-      window.history.replaceState({}, '', cleanUrl.toString());
-
-      goTo('viewHome');
-      showToast('Carte réinitialisée');
-    }
-
-    function showToast(msg) {
-      var t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(function() {
-        t.classList.remove('show');
-      }, 2500);
-    }
-
-    function hasSavedCard() {
-      return !!(d.fn || d.ln || d.jt || d.p1 || d.p2 || d.em || d.wb || d.ad);
-    }
-
-    function restoreApp() {
-      var queryData = getDataFromQuery();
-
-      if (queryData) {
-        d = queryData;
-        saveData();
-      } else {
-        loadData();
-      }
-
-      fillFormFromData();
-
-      if (hasSavedCard()) {
-        if (!getDataFromQuery()) {
-          updateShareUrl(true);
-        }
-        renderCard();
-        goTo('viewCard');
-      } else {
-        goTo('viewHome');
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      attachAutosave();
-      restoreApp();
-    });
-  </script>
+document.addEventListener('DOMContentLoaded', function() {
+  attachAutosave();
+  restoreApp();
+});
+</script>
 </body>
 </html>
