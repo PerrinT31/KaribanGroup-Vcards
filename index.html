@@ -918,6 +918,28 @@ function hasSavedCard() {
   }
 }
 
+  function utf16To8(str) {
+  let out = '';
+  let i, c;
+
+  for (i = 0; i < str.length; i++) {
+    c = str.charCodeAt(i);
+
+    if (c >= 0x0001 && c <= 0x007F) {
+      out += str.charAt(i);
+    } else if (c > 0x07FF) {
+      out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+      out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
+      out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+    } else {
+      out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
+      out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+    }
+  }
+
+  return out;
+}
+
 function makeQR(elId, text, size) {
   const el = document.getElementById(elId);
   if (!el || !text) return;
@@ -925,15 +947,20 @@ function makeQR(elId, text, size) {
   el.innerHTML = '';
 
   try {
-    const safeText = String(text || '').normalize('NFC');
+    const normalized = String(text || '')
+      .replace(/\r\n/g, '\n')
+      .replace(/\r/g, '\n')
+      .normalize('NFC');
+
+    const safeText = utf16To8(normalized);
 
     new QRCode(el, {
       text: safeText,
       width: size,
       height: size,
-      colorDark: '#000',
-      colorLight: '#fff',
-      correctLevel: QRCode.CorrectLevel.M
+      colorDark: '#000000',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.L
     });
   } catch (e) {
     console.error('QR generation failed for', elId, e, text);
