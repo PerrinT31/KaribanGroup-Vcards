@@ -869,23 +869,22 @@ function hasSavedCard() {
 function makeQR(elId, text, size) {
   const el = document.getElementById(elId);
   if (!el || !text) return;
+
   el.innerHTML = '';
 
-  const levels = [QRCode.CorrectLevel.L, QRCode.CorrectLevel.L, QRCode.CorrectLevel.L];
-  const attempts = [text, text.replace(/ADR:[^\n]+\n?/, ''), text.replace(/ADR:[^\n]+\n?/, '').replace(/URL:[^\n]+\n?/, '')];
-
-  for (let i = 0; i < attempts.length; i++) {
-    try {
-      el.innerHTML = '';
-      new QRCode(el, { text: attempts[i], width: size, height: size, colorDark: '#000', colorLight: '#fff', correctLevel: levels[i] });
-      setTimeout(function() {
-        const img = el.querySelector('img');
-        const canvas = el.querySelector('canvas');
-        if (canvas) { canvas.style.display = 'block'; if (img) img.style.display = 'none'; }
-        else if (img) img.style.display = 'block';
-      }, 100);
-      return;
-    } catch(e) {}
+  try {
+    new QRCode(el, {
+      text: text,
+      width: size,
+      height: size,
+      colorDark: '#000',
+      colorLight: '#fff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } catch (e) {
+    console.error('QR generation failed for', elId, e);
+    el.innerHTML = '';
+    showToast('Impossible de générer ce QR code');
   }
 }
 
@@ -903,8 +902,8 @@ function renderCard() {
   if (d.ad) body += row('#FF9500', mapIcon(), 'Adresse', d.ad);
   document.getElementById('cardBody').innerHTML = body;
 
-  makeQR('qrCode', buildVCard(d), 180);
-  makeQR('qrHidden', buildVCard(d), 400);
+ makeQR('qrCode', buildProfileUrl('me'), 180);
+ makeQR('qrHidden', buildProfileUrl('me'), 400);
 
   const tabs = document.getElementById('qrTabs');
   const adviserSection = document.getElementById('qrSectionAdviser');
@@ -918,8 +917,8 @@ function renderCard() {
     document.getElementById('adviserName').textContent = aName;
     document.getElementById('adviserJob').textContent = adviser.jt || '';
 
-    makeQR('qrCodeAdviser', buildVCard(adviser), 180);
-    makeQR('qrHiddenAdviser', buildVCard(adviser), 400);
+    makeQR('qrCodeAdviser', buildProfileUrl('adviser'), 180);
+    makeQR('qrHiddenAdviser', buildProfileUrl('adviser'), 400);
   } else {
     tabs.style.display = 'none';
     adviserSection.style.display = 'none';
