@@ -667,9 +667,15 @@ function escapeHtml(s) {
     .replace(/\u00A0/g, ' ')
     .trim();
 }
+  
+  function stripDiacritics(s) {
+  return String(s || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
 
 function escapeVC(s) {
-  return normalizeText(s)
+  return stripDiacritics(normalizeText(s))
     .replace(/\\/g, '\\\\')
     .replace(/\n/g, '\\n')
     .replace(/;/g, '\\;')
@@ -918,28 +924,6 @@ function hasSavedCard() {
   }
 }
 
-  function utf16To8(str) {
-  let out = '';
-  let i, c;
-
-  for (i = 0; i < str.length; i++) {
-    c = str.charCodeAt(i);
-
-    if (c >= 0x0001 && c <= 0x007F) {
-      out += str.charAt(i);
-    } else if (c > 0x07FF) {
-      out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
-      out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
-      out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
-    } else {
-      out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
-      out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
-    }
-  }
-
-  return out;
-}
-
 function makeQR(elId, text, size) {
   const el = document.getElementById(elId);
   if (!el || !text) return;
@@ -947,12 +931,9 @@ function makeQR(elId, text, size) {
   el.innerHTML = '';
 
   try {
-    const normalized = String(text || '')
+    const safeText = String(text || '')
       .replace(/\r\n/g, '\n')
-      .replace(/\r/g, '\n')
-      .normalize('NFC');
-
-    const safeText = utf16To8(normalized);
+      .replace(/\r/g, '\n');
 
     new QRCode(el, {
       text: safeText,
@@ -968,7 +949,7 @@ function makeQR(elId, text, size) {
     showToast('Impossible de générer ce QR code');
   }
 }
-
+  
 function renderCard() {
   document.getElementById('cardAvatar').textContent = ini(d);
   document.getElementById('cardName').textContent = (d.fn + ' ' + d.ln).trim() || 'Prénom Nom';
