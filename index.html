@@ -1086,16 +1086,6 @@ function restoreApp() {
     goTo('viewHome'); // fallback garanti
   }
 }
-
-  if (hasLocalData) {
-    renderCard();
-    switchQR(activeQR || 'me');
-    goTo('viewCard');
-  } else {
-    goTo('viewHome');
-  }
-}
-
 document.addEventListener('DOMContentLoaded', function() {
   attachAutosave();
   restoreApp();
