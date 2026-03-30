@@ -1059,28 +1059,28 @@ function restoreApp() {
   loadData();
 
   const qd = getDataFromQuery();
-  const hasLocalData = hasSavedCard();
 
   if (qd && qd.profile) {
     if (qd.type === 'adviser') {
       adviser = qd.profile || {};
-      d = {};
       activeQR = 'adviser';
     } else {
       d = qd.profile || {};
-      adviser = {};
       activeQR = 'me';
     }
+    saveData();
   }
 
   fillFormFromData();
 
-  if (qd && qd.profile) {
+  if (hasSavedCard()) {
     renderCard();
-    switchQR(getViewFromQuery() === 'adviser' ? 'adviser' : 'me');
+    switchQR(activeQR || 'me');
     goTo('viewCard');
-    return;
+  } else {
+    goTo('viewHome');
   }
+}
 
   if (hasLocalData) {
     renderCard();
