@@ -825,8 +825,8 @@ function buildVCard(obj) {
 
   const website = cleanUrl(o.wb);
   if (website) lines.push('URL:' + escapeVC(shortenText(website, 120)));
-  if (o.ad) lines.push('ADR:;;' + escapeVC(shortenText(o.ad, 100)) + ';;;;');
-
+if (o.ad) lines.push('ADR:;;' + escapeVC(shortenText(o.ad, 40)) + ';;;;');
+  
   lines.push('END:VCARD');
   return lines.join('\n');
 }
@@ -868,21 +868,24 @@ function hasSavedCard() {
 
 function makeQR(elId, text, size) {
   const el = document.getElementById(elId);
-  if (!el) return;
-
+  if (!el || !text) return;
   el.innerHTML = '';
 
-  try {
-    new QRCode(el, {
-      text: text,
-      width: size,
-      height: size,
-      colorDark: '#000',
-      colorLight: '#fff',
-      correctLevel: QRCode.CorrectLevel.L
-    });
-  } catch (e) {
-    console.error('QR generation failed for', elId, e);
+  const levels = [QRCode.CorrectLevel.L, QRCode.CorrectLevel.L, QRCode.CorrectLevel.L];
+  const attempts = [text, text.replace(/ADR:[^\n]+\n?/, ''), text.replace(/ADR:[^\n]+\n?/, '').replace(/URL:[^\n]+\n?/, '')];
+
+  for (let i = 0; i < attempts.length; i++) {
+    try {
+      el.innerHTML = '';
+      new QRCode(el, { text: attempts[i], width: size, height: size, colorDark: '#000', colorLight: '#fff', correctLevel: levels[i] });
+      setTimeout(function() {
+        const img = el.querySelector('img');
+        const canvas = el.querySelector('canvas');
+        if (canvas) { canvas.style.display = 'block'; if (img) img.style.display = 'none'; }
+        else if (img) img.style.display = 'block';
+      }, 100);
+      return;
+    } catch(e) {}
   }
 }
 
