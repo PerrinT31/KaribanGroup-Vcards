@@ -55,8 +55,7 @@
     .hero-headline strong { font-weight: 500; }
     .hero-sub { font-size: 15px; color: var(--muted); line-height: 1.6; max-width: 340px; }
     
-    <div class="form-section" style="padding:0 0 10px; font-size:11px;">Comment ça marche</div>
-    .s.steps-title {
+   .steps-title {
   padding: 0 0 10px;
   font-size: 11px;
   font-weight: 500;
@@ -364,25 +363,32 @@
       </svg>
     </div>
   </nav>
-  <div class="hero">
+   <div class="hero">
     <div>
       <div class="hero-headline">Ta carte de visite<br><strong>toujours dans ta poche.</strong></div>
-      <div class="hero-sub" style="margin-top:12px;">Crée ta carte de visite virtuelle en 2 minutes. Partage ton QR code. Le client enregistre ton contact instantanément.</div>
+      <div class="hero-sub" style="margin-top:12px;">
+        Crée ta carte de visite virtuelle en 2 minutes. Partage ton QR code. Le client enregistre ton contact instantanément.
+      </div>
     </div>
+
     <div class="steps-title">Comment ça marche</div>
 
-<div class="steps">
-  <div class="step">
-    <div class="step-num">1</div>
-    <div class="step-text"><strong>Tu crées ta carte</strong> avec tes coordonnées professionnelles.</div>
-  </div>
-  <div class="step">
-    <div class="step-num">2</div>
-    <div class="step-text"><strong>Tu l’ajoutes à ton écran d’accueil</strong> pour y accéder rapidement.</div>
-  </div>
-  <div class="step">
-    <div class="step-num">3</div>
-    <div class="step-text"><strong>Le client scanne ton QR code</strong> puis enregistre ton contact.</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Tu crées ta carte</strong> avec tes coordonnées professionnelles.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Tu l’ajoutes à ton écran d’accueil</strong> pour y accéder rapidement.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Le client scanne ton QR code</strong> puis enregistre ton contact.</div>
+      </div>
+    </div>
+
+    <button class="btn-start" onclick="goTo('viewForm')">Créer ma carte →</button>
   </div>
 </div>
 
