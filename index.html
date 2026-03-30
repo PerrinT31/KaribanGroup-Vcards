@@ -641,6 +641,7 @@ function loadData() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
+    console.log('localStorage raw:', raw);
 
     const parsed = JSON.parse(raw);
     d = parsed.d || {};
@@ -855,10 +856,14 @@ function hasAdviser() {
 }
 
 function hasSavedCard() {
-  return !!(
-    d.fn || d.ln || d.jt || d.p1 || d.p2 || d.em || d.wb || d.ad ||
-    adviser.fn || adviser.ln || adviser.jt || adviser.p1 || adviser.p2 || adviser.em || adviser.wb || adviser.ad
-  );
+  try {
+    return !!(
+      (d && (d.fn || d.ln || d.jt || d.p1 || d.p2 || d.em || d.wb || d.ad)) ||
+      (adviser && (adviser.fn || adviser.ln || adviser.jt || adviser.p1 || adviser.p2 || adviser.em || adviser.wb || adviser.ad))
+    );
+  } catch(e) {
+    return false;
+  }
 }
 
 function makeQR(elId, text, size) {
@@ -1078,7 +1083,7 @@ function restoreApp() {
     switchQR(activeQR || 'me');
     goTo('viewCard');
   } else {
-    goTo('viewHome');
+    goTo('viewHome'); // fallback garanti
   }
 }
 
