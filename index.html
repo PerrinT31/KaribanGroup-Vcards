@@ -900,8 +900,8 @@ function renderCard() {
   if (d.ad) body += row('#FF9500', mapIcon(), 'Adresse', d.ad);
   document.getElementById('cardBody').innerHTML = body;
 
-  makeQR('qrCode', buildProfileUrl('me'), 180);
-  makeQR('qrHidden', buildProfileUrl('me'), 400);
+  makeQR('qrCode', buildVCard(d), 180);
+  makeQR('qrHidden', buildVCard(d), 400);
 
   const tabs = document.getElementById('qrTabs');
   const adviserSection = document.getElementById('qrSectionAdviser');
@@ -915,8 +915,8 @@ function renderCard() {
     document.getElementById('adviserName').textContent = aName;
     document.getElementById('adviserJob').textContent = adviser.jt || '';
 
-    makeQR('qrCodeAdviser', buildProfileUrl('adviser'), 180);
-    makeQR('qrHiddenAdviser', buildProfileUrl('adviser'), 400);
+    makeQR('qrCodeAdviser', buildVCard(adviser), 180);
+    makeQR('qrHiddenAdviser', buildVCard(adviser), 400);
   } else {
     tabs.style.display = 'none';
     adviserSection.style.display = 'none';
