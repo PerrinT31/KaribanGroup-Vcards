@@ -726,11 +726,10 @@ function getViewFromQuery() {
 }
 
 function buildProfileUrl(type) {
-  const profile = type === 'adviser' ? adviser : d;
-
   const payload = {
-    profile,
-    type: type || 'me'
+    d,
+    adviser,
+    activeQR: type || 'me'
   };
 
   const enc = encodeData(payload);
@@ -1110,14 +1109,10 @@ function restoreApp() {
 
   const qd = getDataFromQuery();
 
-  if (qd && qd.profile) {
-    if (qd.type === 'adviser') {
-      adviser = qd.profile || {};
-      activeQR = 'adviser';
-    } else {
-      d = qd.profile || {};
-      activeQR = 'me';
-    }
+  if (qd) {
+    d = qd.d || d || {};
+    adviser = qd.adviser || adviser || {};
+    activeQR = qd.activeQR || getViewFromQuery() || 'me';
     saveData();
   }
 
@@ -1125,10 +1120,10 @@ function restoreApp() {
 
   if (hasSavedCard()) {
     renderCard();
-    switchQR(activeQR || 'me');
+    switchQR(hasAdviser() && activeQR === 'adviser' ? 'adviser' : 'me');
     goTo('viewCard');
   } else {
-    goTo('viewHome'); // fallback garanti
+    goTo('viewHome');
   }
 }
 document.addEventListener('DOMContentLoaded', function() {
