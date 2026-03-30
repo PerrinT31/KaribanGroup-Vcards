@@ -597,10 +597,40 @@
 <div id="qrHiddenAdviser" style="position:absolute;left:-9999px;top:0;"></div>
 
 <script>
-var d = {};
-var adviser = {};
-var activeQR = 'me';
-var STORAGE_KEY = 'kariban_vcard_data_v4';
+let d = {};
+let advisor = {};
+let hasAdvisor = false;
+let activeCard = 'main';
+
+const STORAGE_KEY = 'kariban_vcard_app_state_v1';
+
+  function saveAppState() {
+  const state = {
+    d: d,
+    advisor: advisor,
+    hasAdvisor: hasAdvisor,
+    activeCard: activeCard
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function loadAppState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+
+    const state = JSON.parse(raw);
+    d = state.d || {};
+    advisor = state.advisor || {};
+    hasAdvisor = !!state.hasAdvisor;
+    activeCard = state.activeCard || 'main';
+  } catch (e) {
+    d = {};
+    advisor = {};
+    hasAdvisor = false;
+    activeCard = 'main';
+  }
+}
 
 function val(id) {
   var el = document.getElementById(id);
