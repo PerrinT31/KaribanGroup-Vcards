@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kariban — Admin Brief Commercial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0c0c; --surface: #161616; --surface2: #1f1f1f; --surface3: #282828;
+  --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.14);
+  --text: #f0f0ee; --muted: #6e6e68; --muted2: #9a9a92;
+  --accent: #f0f0ee; --danger: #f87171; --success: #4ade80; --warn: #fbbf24;
+  --radius: 12px; --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { min-height: 100%; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+
+/* LOGIN */
+.login-wrap {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.login-card {
+  background: var(--surface); border: 0.5px solid var(--border2);
+  border-radius: 20px; padding: 40px 32px; width: 100%; max-width: 380px;
+}
+.login-logo { margin-bottom: 32px; }
+.login-title { font-size: 22px; font-weight: 500; margin-bottom: 6px; }
+.login-sub { font-size: 13px; color: var(--muted2); margin-bottom: 28px; }
+.login-input {
+  width: 100%; background: var(--surface2); border: 0.5px solid var(--border2);
+  border-radius: var(--radius-sm); padding: 13px 16px; font-size: 15px;
+  color: var(--text); font-family: 'DM Sans', sans-serif; margin-bottom: 12px; outline: none;
+}
+.login-input:focus { border-color: rgba(255,255,255,0.3); }
+.login-error { font-size: 12px; color: var(--danger); margin-bottom: 12px; display: none; }
+.btn-primary {
+  width: 100%; background: var(--text); color: var(--bg); border: none;
+  border-radius: var(--radius-sm); padding: 14px; font-size: 15px; font-weight: 500;
+  font-family: 'DM Sans', sans-serif; cursor: pointer;
+}
+.btn-primary:hover { opacity: 0.88; }
+
+/* APP LAYOUT */
+.app { display: none; min-height: 100vh; }
+.app.visible { display: flex; }
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 0.5px solid var(--border);
+  padding: 24px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.sidebar-logo { padding: 0 20px 24px; border-bottom: 0.5px solid var(--border); margin-bottom: 16px; }
+.sidebar-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0 20px; margin-bottom: 6px; margin-top: 16px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px; padding: 9px 20px;
+  font-size: 13px; color: var(--muted2); cursor: pointer; border: none;
+  background: none; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif;
+  transition: color 0.12s, background 0.12s; border-radius: 0;
+}
+  .sidebar-logo {
+  overflow: visible;
+}
+
+.sidebar-logo svg {
+  display: block;
+  max-width: none;
+  overflow: visible;
+}
+.nav-item:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+.nav-item.active { color: var(--text); background: rgba(255,255,255,0.07); font-weight: 500; }
+.nav-item svg { flex-shrink: 0; }
+.main { flex: 1; overflow-y: auto; }
+.main-header {
+  padding: 24px 32px; border-bottom: 0.5px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  position: sticky; top: 0; background: rgba(12,12,12,0.95);
+  backdrop-filter: blur(8px); z-index: 10;
+}
+.main-title { font-size: 18px; font-weight: 500; }
+.main-sub { font-size: 12px; color: var(--muted2); margin-top: 2px; }
+.main-content { padding: 28px 32px; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* CARDS */
+.card { background: var(--surface); border: 0.5px solid var(--border2); border-radius: var(--radius); padding: 20px; margin-bottom: 12px; }
+.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.card-title { font-size: 14px; font-weight: 500; }
+.card-actions { display: flex; gap: 8px; }
+
+/* FORM */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-grid.full { grid-template-columns: 1fr; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field.span2 { grid-column: 1 / -1; }
+.field label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted2); }
+.field input, .field textarea, .field select {
+  background: var(--surface2); border: 0.5px solid var(--border2);
+  border-radius: var(--radius-sm); padding: 10px 12px; font-size: 13px;
+  color: var(--text); font-family: 'DM Sans', sans-serif; outline: none;
+  transition: border-color 0.15s;
+}
+.field input:focus, .field textarea:focus, .field select:focus { border-color: rgba(255,255,255,0.3); }
+.field select option { background: #1f1f1f; }
+.field textarea { resize: vertical; min-height: 80px; }
+
+/* BUTTONS */
+.btn { padding: 8px 14px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; border: none; display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.15s; }
+.btn:hover { opacity: 0.82; }
+.btn-white { background: var(--text); color: var(--bg); }
+.btn-ghost { background: transparent; color: var(--muted2); border: 0.5px solid var(--border2); }
+.btn-ghost:hover { color: var(--text); }
+.btn-danger { background: rgba(248,113,113,0.15); color: var(--danger); border: 0.5px solid rgba(248,113,113,0.2); }
+.btn-ai { background: rgba(139,92,246,0.15); color: #a78bfa; border: 0.5px solid rgba(139,92,246,0.2); }
+
+/* ITEMS LIST */
+.item-list { display: flex; flex-direction: column; gap: 8px; }
+.item-row {
+  background: var(--surface2); border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm); padding: 12px 14px;
+  display: flex; align-items: center; gap: 12px;
+}
+.item-row-body { flex: 1; min-width: 0; }
+.item-row-title { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item-row-sub { font-size: 11px; color: var(--muted2); margin-top: 2px; }
+.item-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.btn-icon { width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; background: transparent; color: var(--muted2); transition: color 0.12s, background 0.12s; }
+.btn-icon:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+.btn-icon.delete:hover { color: var(--danger); }
+
+/* BADGE */
+.badge { display: inline-flex; padding: 2px 8px; border-radius: 100px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.badge-active { background: rgba(74,222,128,0.1); color: var(--success); }
+.badge-inactive { background: rgba(240,240,238,0.06); color: var(--muted); }
+.badge-high { background: rgba(240,240,238,0.1); color: var(--text); }
+.badge-medium { background: rgba(240,240,238,0.05); color: var(--muted2); }
+
+/* EXPORT */
+.export-box {
+  background: var(--surface2); border: 0.5px solid var(--border2);
+  border-radius: var(--radius); padding: 20px;
+}
+.export-preview {
+  background: #0a0a0a; border-radius: var(--radius-sm); padding: 14px;
+  font-family: monospace; font-size: 11px; color: var(--muted2);
+  max-height: 200px; overflow-y: auto; margin: 14px 0; line-height: 1.5;
+  white-space: pre-wrap; word-break: break-all;
+}
+.export-steps { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.export-step { display: flex; gap: 12px; align-items: flex-start; }
+.export-step-num {
+  width: 22px; height: 22px; border-radius: 50%; background: var(--surface3);
+  border: 0.5px solid var(--border2); display: flex; align-items: center;
+  justify-content: center; font-size: 10px; font-weight: 600; flex-shrink: 0; margin-top: 1px;
+}
+.export-step-text { font-size: 12px; color: var(--muted2); line-height: 1.5; }
+.export-step-text strong { color: var(--text); }
+
+/* AI PANEL */
+.ai-panel {
+  background: rgba(139,92,246,0.06); border: 0.5px solid rgba(139,92,246,0.2);
+  border-radius: var(--radius); padding: 16px; margin-bottom: 16px;
+}
+.ai-panel-title { font-size: 12px; font-weight: 600; color: #a78bfa; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.ai-output {
+  background: var(--surface2); border-radius: var(--radius-sm); padding: 12px;
+  font-size: 13px; color: var(--muted2); line-height: 1.6; min-height: 60px;
+  white-space: pre-wrap; display: none;
+}
+.ai-output.visible { display: block; }
+.ai-loading { font-size: 12px; color: #a78bfa; display: none; align-items: center; gap: 8px; margin-top: 8px; }
+.ai-loading.visible { display: flex; }
+
+/* TOGGLE */
+.toggle { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0; background: var(--surface3); border-radius: 100px;
+  cursor: pointer; transition: background 0.2s;
+}
+.toggle-slider:before {
+  content: ''; position: absolute; height: 14px; width: 14px; left: 3px; bottom: 3px;
+  background: var(--muted); border-radius: 50%; transition: transform 0.2s, background 0.2s;
+}
+.toggle input:checked + .toggle-slider { background: rgba(74,222,128,0.2); }
+.toggle input:checked + .toggle-slider:before { transform: translateX(16px); background: var(--success); }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 999;
+  background: var(--surface2); border: 0.5px solid var(--border2);
+  border-radius: 10px; padding: 12px 18px; font-size: 13px; color: var(--text);
+  opacity: 0; transform: translateY(8px); transition: all 0.2s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* MODAL */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.7); align-items: center; justify-content: center; padding: 24px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border: 0.5px solid var(--border2);
+  border-radius: 16px; padding: 28px; width: 100%; max-width: 520px;
+  max-height: 90vh; overflow-y: auto;
+}
+.modal-title { font-size: 16px; font-weight: 500; margin-bottom: 20px; }
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+@media (max-width: 700px) {
+  .sidebar { display: none; }
+  .main-content { padding: 20px 16px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-grid .field.span2 { grid-column: 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginView">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg width="190" height="22" viewBox="0 0 190 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="1" width="20" height="20" rx="5" fill="#f0f0ee"/>
+  <text x="10" y="14.2" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="8.5" font-weight="700" fill="#0c0c0c">KG</text>
+  <text x="30" y="15" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14" font-weight="700" letter-spacing="0.02em" fill="#f0f0ee">KARIBAN</text>
+  <line x1="112" y1="10.5" x2="134" y2="10.5" stroke="rgba(240,240,238,0.35)" stroke-width="1"/>
+  <text x="140" y="15" font-family="Georgia,serif" font-size="14" fill="#f0f0ee">GROUP</text>
+</svg>
+    </div>
+    <div class="login-title">Administration</div>
+    <div class="login-sub">Accès réservé à l'équipe marketing siège.</div>
+    <input class="login-input" type="password" id="pwdInput" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')tryLogin()">
+    <div class="login-error" id="loginError">Mot de passe incorrect.</div>
+    <button class="btn-primary" onclick="tryLogin()">Accéder →</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="appView">
+  <aside class="sidebar">
+    <div class="sidebar-logo" style="padding: 0 20px 24px; border-bottom: 0.5px solid var(--border); margin-bottom: 16px;">
+  <svg width="170" height="20" viewBox="0 0 170 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="18" height="18" rx="4" fill="#f0f0ee"/>
+    <text x="9" y="12.3" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="8" font-weight="700" fill="#0c0c0c">KG</text>
+    <text x="26" y="13.5" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" font-weight="700" letter-spacing="0.02em" fill="#f0f0ee">KARIBAN</text>
+    <line x1="94" y1="9.5" x2="112" y2="9.5" stroke="rgba(240,240,238,0.25)" stroke-width="1"/>
+    <text x="118" y="13.5" font-family="Georgia,serif" font-size="12" fill="#f0f0ee">GROUP</text>
+  </svg>
+</div>
+    <div class="sidebar-label">Contenu</div>
+    <button class="nav-item active" onclick="navTo('planning', this)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 1.5v3M11 1.5v3M2 7h12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Planning
+    </button>
+    <button class="nav-item" onclick="navTo('promos', this)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 9L9 2l5 5-6 6L2 9z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="11" cy="6" r="1" fill="currentColor"/></svg>
+      Promos
+    </button>
+    <button class="nav-item" onclick="navTo('products', this)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 5l6-2.5L14 5v6l-6 2.5L2 11V5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 2.5v11M2 5l6 2.5 6-2.5" stroke="currentColor" stroke-width="1.2"/></svg>
+      Produits
+    </button>
+    <button class="nav-item" onclick="navTo('market', this)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M8 5v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Marché
+    </button>
+    <div class="sidebar-label">Outils</div>
+    <button class="nav-item" onclick="navTo('export', this)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 8l3 3 3-3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12h12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Exporter
+    </button>
+    <button class="nav-item" onclick="logout()" style="margin-top:auto; color:var(--muted);">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12l4-4-4-4M14 8H6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 14H3a1 1 0 01-1-1V3a1 1 0 011-1h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Déconnexion
+    </button>
+  </aside>
+
+  <main class="main">
+    <div class="main-header">
+      <div>
+        <div class="main-title" id="sectionTitle">Planning</div>
+        <div class="main-sub" id="sectionSub">Communications planifiées</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-white" id="btnAdd" onclick="openAdd()">+ Ajouter</button>
+      </div>
+    </div>
+
+    <div class="main-content">
+
+      <!-- PLANNING -->
+      <div class="section active" id="section-planning">
+        <div class="item-list" id="list-planning"></div>
+      </div>
+
+      <!-- PROMOS -->
+      <div class="section" id="section-promos">
+        <div class="item-list" id="list-promos"></div>
+      </div>
+
+      <!-- PRODUITS -->
+      <div class="section" id="section-products">
+        <div class="item-list" id="list-products"></div>
+      </div>
+
+      <!-- MARCHÉ -->
+      <div class="section" id="section-market">
+        <div class="item-list" id="list-market"></div>
+      </div>
+
+      <!-- EXPORT -->
+      <div class="section" id="section-export">
+        <div class="export-box">
+          <div style="font-size:14px;font-weight:500;margin-bottom:4px;">Publier sur GitHub</div>
+          <div style="font-size:12px;color:var(--muted2);margin-bottom:16px;">Un clic publie le <code style="background:var(--surface3);padding:1px 5px;border-radius:4px;">data.json</code> sur GitHub. Vercel redéploie automatiquement en ~20 secondes.</div>
+
+          <div class="export-preview" id="exportPreview"></div>
+
+          <div style="display:flex;gap:10px;margin-bottom:12px;">
+            <button class="btn btn-white" onclick="publishToGitHub()" id="btnPublish" style="flex:1;justify-content:center;">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1C3.686 1 1 3.686 1 7c0 2.654 1.721 4.904 4.107 5.698.3.055.41-.13.41-.288 0-.142-.005-.517-.008-1.015-1.669.363-2.021-.805-2.021-.805-.273-.693-.667--.878-.667-.878-.545-.373.041-.365.041-.365.603.042.92.619.92.619.535.918 1.404.652 1.746.499.054-.388.209-.652.381-.802-1.332-.152-2.733-.666-2.733-2.963 0-.655.234-1.19.617-1.61-.062-.151-.267-.761.058-1.587 0 0 .503-.161 1.648.614A5.74 5.74 0 017 4.388c.51.002 1.022.069 1.5.202 1.144-.775 1.646-.614 1.646-.614.327.826.121 1.436.06 1.587.384.42.616.955.616 1.61 0 2.304-1.404 2.81-2.74 2.958.215.186.407.552.407 1.113 0 .803-.007 1.451-.007 1.648 0 .16.108.347.413.288C11.28 11.902 13 9.653 13 7c0-3.314-2.686-6-6-6z" fill="currentColor"/></svg>
+              Publier maintenant
+            </button>
+            <button class="btn btn-ghost" onclick="downloadJSON()" style="flex:1;justify-content:center;">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v7M4 7l3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 11h10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              Télécharger .json
+            </button>
+          </div>
+
+          <div id="publishStatus" style="display:none;font-size:12px;padding:10px 12px;border-radius:8px;margin-bottom:12px;"></div>
+
+          <div style="border-top:0.5px solid var(--border);padding-top:14px;margin-top:4px;">
+            <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:10px;">Configuration GitHub</div>
+            <div class="form-grid">
+              <div class="field">
+                <label>Utilisateur GitHub</label>
+                <input id="ghUser" type="text" placeholder="PerrinT31">
+              </div>
+              <div class="field">
+                <label>Nom du repo</label>
+                <input id="ghRepo" type="text" placeholder="Kariban-Group-commercial_center">
+              </div>
+              <div class="field span2">
+                <label>Personal Access Token</label>
+                <input id="ghToken" type="password" placeholder="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">
+              </div>
+            </div>
+            <button class="btn btn-ghost" onclick="saveGHConfig()" style="margin-top:10px;">Sauvegarder la configuration</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- MODAL ADD/EDIT -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">Ajouter</div>
+    <div id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-white" onclick="saveItem()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AI -->
+<div class="modal-overlay" id="aiModal" onclick="if(event.target===this)closeAI()">
+  <div class="modal">
+    <div class="modal-title">Générer avec Claude</div>
+    <div class="ai-panel">
+      <div class="ai-panel-title">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 7l1.5 1.5L9.5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Rédaction assistée par Claude
+      </div>
+      <div class="field" style="margin-bottom:10px;">
+        <label>Décris ce que tu veux générer</label>
+        <textarea id="aiPrompt" style="min-height:70px;" placeholder="Ex: Met en avant pour l'été le t-shirt IB300 pour des évènements gros volumes..."></textarea>
+      </div>
+      <button class="btn btn-ai" onclick="callClaude()" style="width:100%;justify-content:center;">Générer →</button>
+      <div class="ai-loading" id="aiLoading">
+        <div style="width:14px;height:14px;border:1.5px solid rgba(167,139,250,0.3);border-top-color:#a78bfa;border-radius:50%;animation:spin 0.7s linear infinite;"></div>
+        Claude rédige...
+      </div>
+    </div>
+    <div class="field">
+      <label>Résultat</label>
+      <textarea id="aiOutput" style="min-height:120px;" placeholder="Le texte généré apparaîtra ici — tu peux le modifier avant de copier."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeAI()">Fermer</button>
+      <button class="btn btn-white" onclick="copyAI()">Copier le texte</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var ADMIN_PWD = 'KaribanGr0up@2026';
+var currentSection = 'planning';
+var editingId = null;
+
+var data = {
+  meta: { lastUpdated: '', updatedBy: 'Admin' },
+  planning: [], promos: [], products: [], market: []
+};
+
+var SECTION_META = {
+  planning: { title:'Planning', sub:'Communications planifiées' },
+  promos:   { title:'Promos', sub:'Offres et remises actives' },
+  products: { title:'Produits', sub:'Produits à pousser sur le terrain' },
+  market:   { title:'Marché', sub:'Infos marché et veille concurrentielle' },
+  export:   { title:'Exporter', sub:'Générer et télécharger data.json' }
+};
+
+function tryLogin() {
+  var pwd = document.getElementById('pwdInput').value;
+  if (pwd === ADMIN_PWD) {
+    document.getElementById('loginView').style.display = 'none';
+    document.getElementById('appView').classList.add('visible');
+    loadFromStorage();
+    renderAll();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+function logout() {
+  document.getElementById('loginView').style.display = 'flex';
+  document.getElementById('appView').classList.remove('visible');
+  document.getElementById('pwdInput').value = '';
+}
+
+function loadFromStorage() {
+  try {
+    var raw = localStorage.getItem('kariban_brief_admin');
+    if (raw) data = JSON.parse(raw);
+  } catch(e) {}
+}
+
+function saveToStorage() {
+  data.meta.lastUpdated = new Date().toISOString().split('T')[0];
+  localStorage.setItem('kariban_brief_admin', JSON.stringify(data));
+}
+
+function navTo(section, el) {
+  currentSection = section;
+  document.querySelectorAll('.nav-item').forEach(function(i){ i.classList.remove('active'); });
+  el.classList.add('active');
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('section-'+section).classList.add('active');
+  document.getElementById('sectionTitle').textContent = SECTION_META[section].title;
+  document.getElementById('sectionSub').textContent = SECTION_META[section].sub;
+  var hideFor = ['export'];
+  document.getElementById('btnAdd').style.display = hideFor.includes(section) ? 'none' : '';
+  document.getElementById('btnAI').style.display = hideFor.includes(section) ? 'none' : '';
+  if (section === 'export') renderExport();
+}
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+function renderAll() {
+  renderList('planning');
+  renderList('promos');
+  renderList('products');
+  renderList('market');
+}
+
+function renderList(section) {
+  var el = document.getElementById('list-'+section);
+  var items = data[section] || [];
+  if (!items.length) {
+    el.innerHTML = '<div style="text-align:center;padding:32px 16px;color:var(--muted);font-size:13px;">Aucun élément — clique sur "+ Ajouter"</div>';
+    return;
+  }
+  el.innerHTML = items.map(function(item) {
+    var badge = getBadge(section, item);
+    var sub = getSub(section, item);
+    return '<div class="item-row">' +
+      '<div class="item-row-body">' +
+        '<div class="item-row-title">'+escHtml(item.title||item.name||'Sans titre')+'</div>' +
+        '<div class="item-row-sub">'+sub+(badge?'&nbsp;'+badge:'')+'</div>' +
+      '</div>' +
+      '<div class="item-row-actions">' +
+        '<button class="btn-icon" onclick="editItem(\''+section+'\',\''+item.id+'\')" title="Modifier"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2.5l2.5 2.5L4 12.5H1.5V10L9 2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></button>' +
+        '<button class="btn-icon delete" onclick="deleteItem(\''+section+'\',\''+item.id+'\')" title="Supprimer"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M5 4V2.5h4V4M5.5 6.5v4M8.5 6.5v4M3 4l.5 8h7L11 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+      '</div></div>';
+  }).join('');
+}
+
+function getBadge(section, item) {
+  if (section==='promos') return item.active ? '<span class="badge badge-active">Actif</span>' : '<span class="badge badge-inactive">Inactif</span>';
+  if (section==='products') return item.priority==='high' ? '<span class="badge badge-high">Priorité haute</span>' : '<span class="badge badge-medium">Priorité moyenne</span>';
+  return '';
+}
+
+function getSub(section, item) {
+  if (section==='planning') return escHtml(item.date) + ' · ' + escHtml(item.type);
+  if (section==='promos') return 'Jusqu\'au ' + escHtml(item.validUntil);
+  if (section==='products') return 'Réf. ' + escHtml(item.ref) + ' · ' + escHtml(item.target);
+  if (section==='market') return escHtml(item.tag) + ' · ' + escHtml(item.date);
+  return '';
+}
+
+function openAdd() { editingId = null; buildModal(currentSection, null); document.getElementById('modal').classList.add('open'); }
+
+function editItem(section, id) {
+  var item = (data[section]||[]).find(function(i){ return i.id===id; });
+  if (!item) return;
+  editingId = id;
+  buildModal(section, item);
+  document.getElementById('modal').classList.add('open');
+}
+
+function deleteItem(section, id) {
+  if (!confirm('Supprimer cet élément ?')) return;
+  data[section] = (data[section]||[]).filter(function(i){ return i.id!==id; });
+  saveToStorage();
+  renderList(section);
+  showToast('Élément supprimé');
+}
+
+function buildModal(section, item) {
+  var t = item ? 'Modifier' : 'Ajouter';
+  document.getElementById('modalTitle').textContent = t + ' — ' + SECTION_META[section].title;
+  var f = item || {};
+  var html = '';
+
+  if (section==='planning') {
+    html = '<div class="form-grid">' +
+      field('title','Titre',f.title,'text','span2') +
+      field('date','Date',f.date,'date') +
+      select('type','Type',f.type,['email','catalogue','event','social','other']) +
+      field('description','Description',f.description,'text','span2') +
+      '</div>';
+  } else if (section==='promos') {
+    html = '<div class="form-grid">' +
+      field('title','Titre',f.title,'text','span2') +
+      field('badge','Badge (ex: -15%)',f.badge,'text') +
+      field('validUntil','Valable jusqu\'au',f.validUntil,'date') +
+      field('description','Description',f.description,'text','span2') +
+      toggle('active','Promo active',f.active!==false) +
+      '</div>';
+  } else if (section==='products') {
+    html = '<div class="form-grid">' +
+      field('name','Nom produit',f.name,'text','span2') +
+      field('ref','Référence',f.ref,'text') +
+      field('target','Cible (ex: Corporate)',f.target,'text') +
+      select('priority','Priorité',f.priority||'high',['high','medium']) +
+      field('pitch','Pitch commercial',f.pitch,'textarea','span2') +
+      '</div>';
+  } else if (section==='market') {
+    html = '<div class="form-grid">' +
+      field('title','Titre',f.title,'text','span2') +
+      select('tag','Catégorie',f.tag,['Tendance','Concurrence','Opportunité','Autre']) +
+      field('date','Date',f.date,'date') +
+      field('content','Contenu',f.content,'textarea','span2') +
+      '</div>';
+  }
+  document.getElementById('modalBody').innerHTML = html;
+}
+
+function field(id, label, val, type, cls) {
+  var isTA = type==='textarea';
+  var tag = isTA ? '<textarea id="f_'+id+'" style="min-height:80px;">'+escHtml(val||'')+'</textarea>' :
+    '<input id="f_'+id+'" type="'+type+'" value="'+escHtml(val||'')+'">';
+  return '<div class="field'+(cls?' '+cls:'')+'">' +
+    '<label>'+label+'</label>'+tag+'</div>';
+}
+
+function select(id, label, val, opts) {
+  var options = opts.map(function(o){ return '<option value="'+o+'"'+(o===val?' selected':'')+'>'+o+'</option>'; }).join('');
+  return '<div class="field"><label>'+label+'</label><select id="f_'+id+'">'+options+'</select></div>';
+}
+
+function toggle(id, label, checked) {
+  return '<div class="field span2" style="flex-direction:row;align-items:center;justify-content:space-between;">' +
+    '<label style="text-transform:none;font-size:13px;color:var(--text);">'+label+'</label>' +
+    '<label class="toggle"><input type="checkbox" id="f_'+id+'"'+(checked?' checked':'')+'>'+
+    '<span class="toggle-slider"></span></label></div>';
+}
+
+function fval(id) {
+  var el = document.getElementById('f_'+id);
+  if (!el) return '';
+  if (el.type==='checkbox') return el.checked;
+  return el.value.trim();
+}
+
+function saveItem() {
+  var s = currentSection;
+  var item = { id: editingId || uid() };
+
+  if (s==='planning') {
+    item.title=fval('title'); item.date=fval('date'); item.type=fval('type'); item.description=fval('description'); item.status='upcoming';
+  } else if (s==='promos') {
+    item.title=fval('title'); item.badge=fval('badge'); item.validUntil=fval('validUntil'); item.description=fval('description'); item.active=fval('active');
+  } else if (s==='products') {
+    item.name=fval('name'); item.ref=fval('ref'); item.target=fval('target'); item.priority=fval('priority'); item.pitch=fval('pitch');
+  } else if (s==='market') {
+    item.title=fval('title'); item.tag=fval('tag'); item.date=fval('date'); item.content=fval('content');
+  }
+
+  if (editingId) {
+    var idx = data[s].findIndex(function(i){ return i.id===editingId; });
+    if (idx>-1) data[s][idx] = item;
+  } else {
+    data[s].push(item);
+  }
+
+  saveToStorage();
+  renderList(s);
+  closeModal();
+  showToast(editingId ? 'Élément mis à jour' : 'Élément ajouté');
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+function renderExport() {
+  var preview = JSON.stringify(data, null, 2);
+  document.getElementById('exportPreview').textContent = preview;
+  loadGHConfig();
+}
+
+function saveGHConfig() {
+  var cfg = { user: document.getElementById('ghUser').value.trim(), repo: document.getElementById('ghRepo').value.trim(), token: document.getElementById('ghToken').value.trim() };
+  if (!cfg.user || !cfg.repo || !cfg.token) { showToast('Remplis les 3 champs de configuration.'); return; }
+  localStorage.setItem('kariban_gh_config', JSON.stringify(cfg));
+  showToast('Configuration sauvegardée');
+}
+
+function loadGHConfig() {
+  try {
+    var cfg = JSON.parse(localStorage.getItem('kariban_gh_config') || '{}');
+    if (cfg.user) document.getElementById('ghUser').value = cfg.user;
+    if (cfg.repo) document.getElementById('ghRepo').value = cfg.repo;
+    if (cfg.token) document.getElementById('ghToken').value = cfg.token;
+  } catch(e) {}
+}
+
+function setPublishStatus(msg, type) {
+  var el = document.getElementById('publishStatus');
+  var colors = { loading: 'rgba(251,191,36,0.1)', success: 'rgba(74,222,128,0.1)', error: 'rgba(248,113,113,0.1)' };
+  var textColors = { loading: '#fbbf24', success: '#4ade80', error: '#f87171' };
+  el.style.display = 'block';
+  el.style.background = colors[type] || colors.loading;
+  el.style.color = textColors[type] || textColors.loading;
+  el.style.border = '0.5px solid ' + (textColors[type] || textColors.loading) + '33';
+  el.textContent = msg;
+}
+
+function publishToGitHub() {
+  var user = document.getElementById('ghUser').value.trim();
+  var repo = document.getElementById('ghRepo').value.trim();
+  var token = document.getElementById('ghToken').value.trim();
+
+  if (!user || !repo || !token) {
+    showToast('Configure d\'abord tes infos GitHub en bas.');
+    document.getElementById('ghUser').focus();
+    return;
+  }
+
+  data.meta.lastUpdated = new Date().toISOString().split('T')[0];
+  data.meta.updatedBy = 'Admin';
+  saveToStorage();
+
+  var content = JSON.stringify(data, null, 2);
+  var encoded = btoa(unescape(encodeURIComponent(content)));
+  var apiUrl = 'https://api.github.com/repos/' + user + '/' + repo + '/contents/data.json';
+
+  var btn = document.getElementById('btnPublish');
+  btn.disabled = true;
+  setPublishStatus('Publication en cours…', 'loading');
+
+  // 1. Récupère le SHA actuel du fichier (requis pour le update)
+  fetch(apiUrl, {
+    headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(existing) {
+    var body = {
+      message: 'Brief commercial mis à jour — ' + data.meta.lastUpdated,
+      content: encoded,
+      branch: 'main'
+    };
+    if (existing.sha) body.sha = existing.sha;
+
+    return fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'token ' + token,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+  })
+  .then(function(r) {
+    if (!r.ok) return r.json().then(function(e){ throw new Error(e.message || 'Erreur GitHub'); });
+    return r.json();
+  })
+  .then(function() {
+    setPublishStatus('✓ Publié sur GitHub — Vercel redéploie dans ~20 secondes.', 'success');
+    showToast('Publié avec succès !');
+    btn.disabled = false;
+  })
+  .catch(function(e) {
+    setPublishStatus('Erreur : ' + e.message, 'error');
+    showToast('Erreur de publication');
+    btn.disabled = false;
+  });
+}
+
+function downloadJSON() {
+  data.meta.lastUpdated = new Date().toISOString().split('T')[0];
+  saveToStorage();
+  var blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'data.json';
+  a.click();
+  showToast('data.json téléchargé');
+}
+
+function openAI() { document.getElementById('aiOutput').value=''; document.getElementById('aiPrompt').value=''; document.getElementById('aiModal').classList.add('open'); }
+function closeAI() { document.getElementById('aiModal').classList.remove('open'); }
+
+function callClaude() {
+  var prompt = document.getElementById('aiPrompt').value.trim();
+  if (!prompt) { showToast('Décris ce que tu veux générer.'); return; }
+  document.getElementById('aiLoading').classList.add('visible');
+  document.getElementById('aiOutput').value = '';
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      system: 'Tu es un expert marketing B2B spécialisé textile promotionnel pour Kariban Group. Tu rédiges des contenus concis, percutants, orientés bénéfices revendeur. Pas de bullet points excessifs. Ton direct et professionnel.',
+      messages: [{ role: 'user', content: prompt }]
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(res){
+    var text = (res.content && res.content[0] && res.content[0].text) || 'Erreur de génération.';
+    document.getElementById('aiOutput').value = text;
+    document.getElementById('aiLoading').classList.remove('visible');
+  })
+  .catch(function(e){
+    document.getElementById('aiOutput').value = 'Erreur : ' + e.message;
+    document.getElementById('aiLoading').classList.remove('visible');
+  });
+}
+
+function copyAI() {
+  var text = document.getElementById('aiOutput').value;
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(function(){ showToast('Texte copié'); });
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Load data.json on start to pre-fill if exists
+fetch('/data.json').then(function(r){ return r.json(); }).then(function(json){
+  var stored = localStorage.getItem('kariban_brief_admin');
+  if (!stored) { data = json; }
+}).catch(function(){});
+</script>
+</body>
+</html>

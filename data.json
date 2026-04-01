@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "lastUpdated": "2026-03-31",
+    "updatedBy": "Admin"
+  },
+  "planning": [
+    {
+      "id": "p1",
+      "title": "NS RINGER",
+      "date": "2026-04-07",
+      "type": "email",
+      "description": "Envoi emailling clients",
+      "status": "upcoming"
+    },
+    {
+      "id": "p2",
+      "title": "KP Caps Gold Label",
+      "date": "2026-04-07",
+      "type": "other",
+      "description": "Bannière site",
+      "status": "upcoming"
+    }
+  ],
+  "promos": [
+    {
+      "id": "pr1",
+      "title": "Promo Kariban K102",
+      "badge": "-15%",
+      "validUntil": "2026-03-18",
+      "description": "Remise 15% sur commande >50 pièces jusqu'au 31 mars",
+      "active": true
+    },
+    {
+      "id": "pr2",
+      "title": "Offre bienvenue nouveaux clients",
+      "badge": "Port offert",
+      "validUntil": "2026-06-30",
+      "description": "Frais de port offerts sur première commande",
+      "active": true
+    }
+  ],
+  "products": [
+    {
+      "id": "prod1",
+      "ref": "K102",
+      "name": "Veste softshell légère",
+      "pitch": "Rapport qualité/prix imbattable sur le segment outdoor. Stock disponible immédiatement.",
+      "target": "Sport & outdoor",
+      "priority": "high"
+    },
+    {
+      "id": "prod2",
+      "ref": "BC0601",
+      "name": "Polo piqué classic",
+      "pitch": "Best-seller entreprise, disponible en 30 coloris, délai 5 jours.",
+      "target": "Corporate",
+      "priority": "high"
+    },
+    {
+      "id": "prod3",
+      "ref": "K234",
+      "name": "Veste polaire bicolore",
+      "pitch": "Nouveauté hiver, fort potentiel sur le segment collectivités.",
+      "target": "Collectivités",
+      "priority": "medium"
+    }
+  ],
+  "market": [
+    {
+      "id": "m1",
+      "title": "Tendance éco-responsable",
+      "tag": "Tendance",
+      "date": "2026-05-15",
+      "content": "Les acheteurs B2B demandent de plus en plus des certifications OEKO-TEX et des matières recyclées. Mettre en avant nos gammes certifiées."
+    },
+    {
+      "id": "m2",
+      "title": "Concurrent X — nouvelle gamme",
+      "tag": "Concurrence",
+      "date": "2026-06-10",
+      "content": "Lancement d'une gamme corporate entrée de gamme. Notre avantage : délais plus courts et service client dédié."
+    }
+  ]
+}
